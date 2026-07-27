@@ -1,0 +1,9 @@
+results*/**
+resources/**
+logs/**
+.snakemake
+.snakemake/**
+report*.html
+dag.*
+rulegraph.*
+overlap*
