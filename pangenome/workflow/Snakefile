@@ -1,0 +1,25 @@
+configfile: "config/config.yaml"
+
+include: "rules/common.smk"
+include: "rules/convert.smk"
+include: "rules/panaroo.smk"
+include: "rules/roary.smk"
+include: "rules/upsetplots.smk"
+include: "rules/panqc.smk"
+include: "rules/compare.smk"
+
+rule all:
+    input:
+        expand("results/{strains}/panaroo/run/gene_presence_absence_no_refound.csv", strains=config["strains"]),
+        expand("results/{strains}/panaroo/refound_vs_pseudo/refound_vs_pseudo.png", strains=config["strains"]),
+        expand("results/{strains}/{tool}/upsetplots/{subset}_regex/{plot}.png", strains=config["strains"], tool=["roary", "panaroo"], subset=config["upsetplots"]["subsets_regex"], plot=config["upsetplots"]["plots"]),
+        expand("results/{strains}/{tool}/upsetplots/{subset}_list/{plot}.png", strains=config["strains"], tool=["roary", "panaroo"], subset=config["upsetplots"]["subsets_list"], plot=config["upsetplots"]["plots"]),
+        expand("results/{strains}/{tool}/panqc", strains=config["strains"], tool=["roary", "panaroo"]),
+        expand("results/{strains}/panaroo/panqc/aligned_new_groups", strains=config["strains"]),
+        expand("results/{strains}/compare/plots/roary_vs_panaroo_venn.png", strains=config["strains"]),
+        expand("results/{strains}/compare/plots/roary_vs_panaroo_boxplot.png", strains=config["strains"]),
+        expand("results/{strains}/compare/groups/common.tsv", strains=config["strains"]),
+        expand("results/{strains}/compare/groups/unique_roary.tsv", strains=config["strains"]),
+        expand("results/{strains}/compare/groups/unique_panaroo.tsv", strains=config["strains"]),
+        expand("results/{strains}/compare/groups/unique_matched.tsv", strains=config["strains"]),
+        expand("results/{strains}/compare/entropy/alignment_entropy.png", strains=config["strains"])

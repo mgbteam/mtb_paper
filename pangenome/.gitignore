@@ -1,0 +1,9 @@
+results*/**
+resources/**
+logs/**
+.snakemake
+.snakemake/**
+temp/**
+report.html
+dag.*
+rulegraph.png

@@ -1,0 +1,31 @@
+---
+
+strains:
+  all: [N0072, N0153, N0157, N0052, N0145, N0155]
+  all_with_h37rv: [N0072, N0153, N0157, N0052, N0145, N0155, H37Rv]
+
+convert_pseudo: False
+
+roary:
+  threads: 16
+  flags: -e --mafft
+
+panaroo:
+  threads: 16
+  flags: --clean-mode strict --remove-invalid-genes --refind-mode default --alignment pan
+
+upsetplots:
+  colors:
+    "#ff00ff": [N0072, N0153, N0157]
+    "#0000ff": [N0052, N0145, N0155]
+  plots:
+    all:
+    norefound: --no-refound
+    onlyrefound: --refound-only
+  subsets_regex:
+    "All": ".*"
+    "T2TA": "type II toxin-antitoxin"
+    "ESX": "ESX"
+  subsets_list:
+    PE: "data/subset_ids/pe_final.txt"
+    PPE: "data/subset_ids/ppe_final.txt"
