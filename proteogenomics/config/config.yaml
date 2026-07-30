@@ -1,0 +1,164 @@
+---
+# The strains to analyze. Filenames in all data subfolders must correspond to this
+strains: ["0072", "0153", "0157", "0052", "0145", "0155"]
+
+
+# Folder containing the MS/MS data in subfolders corresponding to the strains above
+rawfiles:
+  folder: data/raw
+  extension: .d
+
+
+# Protein identifier prefixes that mark RefSeq proteins and contaminants
+prefixes:
+  refseq: FF
+  contam: sp|
+
+
+# Default settings used for all searches if not specified otherwise per search
+search_default_settings:
+  # Which iPtgxDB to use as a search database (folder must be present in data/iptgxdbs)
+  iptgxdb: standard
+
+  # MSFragger search settings, edit the provided config file to adjust MSFragger options
+  msfragger:
+    executable: /scratch/src/FragPipe-22.0/tools/MSFragger-4.1/MSFragger-4.1.jar
+    config: config/msfragger/fragger_default_30aa.params
+    threads: 10
+    memory: 48G
+
+  # Settings for peptide rescoring with Percolator
+  percolator:
+    executable: /scratch/src/FragPipe-22.0/tools/percolator_3_6_5/linux/percolator
+    flags: --no-terminate --post-processing-tdc --protein-enzyme trypsinp --protein-report-fragments --protein-report-duplicates
+    fragpipe_classpath: /scratch/src/FragPipe-22.0/lib
+    threads: 10
+
+    # Optionally enable MSBooster for more accurate in silico spectrum prediction
+    msbooster:
+      enable: True
+      msbooster_classpath: /scratch/src/FragPipe-22.0/tools/MSBooster-1.2.31.jar
+      batmass_classpath: /scratch/src/FragPipe-22.0/tools/batmass-io-1.33.4.jar
+      config: config/msbooster/msbooster_params.txt
+      threads: 10
+      memory: 48G
+
+  # Protein inference and FDR filtering with Philosopher
+  philosopher:
+    executable: /scratch/src/FragPipe-22.0/tools/Philosopher/philosopher-v5.1.1
+    peptideprophet_flags: --decoyprobs --ppm --accmass --nonparam --expectscore
+    proteinprophet_flags: --maxppmdiff 2000000
+    filter_flags: --sequential --razor --picked --prot 0.01
+    report_flags: --decoys
+    abacus_flags: --razor --picked --reprint
+
+  # Settings for additional ad-hoc filters to limit FDR of novel proteins
+  filter:
+    # Minimum number of peptides for proteins above specified weight (in Da)
+    peps:
+      min_peps: 2
+      min_weight: 15000
+    # Annotation source dependent minimum of PSMs
+    psms:
+      RefSeq: 2
+      Prodigal: 3
+      ChemGenome: 3
+      in-silico: 4
+
+
+# The searches that will be performed. Default settings can be overriden here
+searches:
+  refseq:
+    iptgxdb: refseq
+
+  standard:
+    iptgxdb: standard
+
+  custom:
+    iptgxdb: custom
+    filter:
+      psms:
+        RefSeq: 2
+        Prodigal: 3
+        ChemGenome: 3
+        ribo: 3
+
+
+# Selection and configuration of post-processing steps performed on novel proteins
+postproc:
+  # Check whether novel proteins are part of other annotations not included in iPtgxDB
+  annot_overlap:
+    refseq2023:
+      filename: "{strain}.gb"
+    refseq2024:
+      filename: "{strain}.gb"
+
+  # Lipoprotein and signal peptide prediction
+  lipop:
+    enable: True
+    executable: /scratch/src/LipoP1.0a/LipoP
+
+  # Prediction of subcellular localization
+  psortb:
+    enable: True
+    executable: /scratch/src/PSORTb/psortb
+    flags: -n
+
+  # Identification of functional domains
+  interpro:
+    enable: True
+    threads: 16
+    folder: /scratch/src/interproscan-5.59-91.0
+    flags: --disable-precalc --minsize 18 --pathways --goterms
+  
+  # Functional annotation by orthology
+  eggnog:
+    enable: True
+    threads: 16
+    folder: /scratch/src/eggnog
+    flags: -m diamond
+
+  # Search for homologous proteins
+  hhsuite:
+    enable: True
+    threads: 2
+    database: /scratch/src/hhsuite/UniRef30_2023_02
+    flags: -n 1
+    exclude: [hypothetical, uncharacterized, unannotated]
+  
+  # Antimicrobial peptide prediction
+  ampscanner2:
+    enable: True
+    executable: /scratch/src/amp-scanner-v2/amp_scanner_v2_predict_tf1.py
+    model: /scratch/src/amp-scanner-v2/trained-models/021820_FULL_MODEL.h5
+    flags:
+
+  # Conservation BLAST
+  conservation_blast:
+    enable: True
+    threads: 1
+    blastdb: /scratch/src/blastdb/core_nt
+    taxdb:  # optional
+    flags: -task tblastn -word_size 6 -evalue 100 -max_target_seqs 99999 -gapopen 11 -gapextend 1 -matrix BLOSUM62 -threshold 21 -comp_based_stats 2 -db_gencode 11 -seg no
+    columns: [qlen, length, nident, pident, evalue, staxids, sscinames, scomnames, sblastnames, sskingdoms, salltitles]
+    tax_levels: ["Mycobacterium tuberculosis complex", "Mycobacterium", "Mycobacteriaceae", "Mycobacteriales", "Actinomycetes", "Actinomycetota", "Bacillati", "Bacteria"]
+    min_coverage: 60
+    min_identity: 40
+    max_evalue: 0.01
+
+  # Predicted signal of selection based on GC ratio difference between 2nd and 3rd codon position
+  codon_gc_freq:
+    enable: True
+
+  # Functional prediction based on structural similarity (requires manual intervention)
+  phyre2:
+    enable: True
+
+  # Operon prediction including annotated and novel proteins (required manual intervention)
+  operon_mapper:
+    enable: True
+
+  # Pangenome analysis including annotated and novel proteins
+  panaroo:
+    threads: 16
+    flags: --clean-mode sensitive --refind-mode off

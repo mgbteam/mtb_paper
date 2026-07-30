@@ -1,9 +1,10 @@
 results*/**
 resources/**
 logs/**
+temp/**
 .snakemake
 .snakemake/**
 report*.html
 dag.*
-rulegraph.*
+rulegraph.png
 overlap*

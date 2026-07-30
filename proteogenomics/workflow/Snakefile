@@ -1,0 +1,90 @@
+configfile: "config/config.yaml"
+report: "report/workflow.rst"
+
+include: "rules/common.smk"
+include: "rules/iptgxdb_add_contams.smk"
+
+include: "rules/search_database_convert.smk"
+include: "rules/search_msfragger.smk"
+include: "rules/search_msbooster.smk"
+include: "rules/search_percolator.smk"
+
+include: "rules/protinf_philosopher_proteinprophet.smk"
+include: "rules/protinf_philosopher_filter.smk"
+include: "rules/protinf_philosopher_abacus.smk"
+
+include: "rules/protinf_protparam_filter.smk"
+include: "rules/protinf_collapse_extensions.smk"
+include: "rules/protinf_pseudo_overlap.smk"
+include: "rules/protinf_split_categories.smk"
+include: "rules/protinf_summary.smk"
+
+include: "rules/postproc_add_annot.smk"
+
+include: "rules/postproc_annot_overlap.smk"
+include: "rules/postproc_extract_seqs.smk"
+include: "rules/postproc_lipop.smk"
+include: "rules/postproc_psortb.smk"
+include: "rules/postproc_interpro.smk"
+include: "rules/postproc_eggnog.smk"
+include: "rules/postproc_hhsuite.smk"
+include: "rules/postproc_ampscanner2.smk"
+include: "rules/postproc_conservation_blast.smk"
+include: "rules/postproc_operon_mapper.smk"
+include: "rules/postproc_phyre2.smk"
+include: "rules/postproc_codon_gc_freq.smk"
+include: "rules/postproc_combine.smk"
+
+include: "rules/postproc_panaroo.smk"
+include: "rules/postproc_integrate_panaroo.smk"
+
+
+def collect_unconditional(wildcards):
+    results = []
+
+    for search in config["searches"]:
+        results.append(f"results/searches/{search}/protinf/protinf_summary.tsv")
+        results.append(f"results/searches/{search}/postproc/panaroo/gene_presence_absence.tsv")
+
+        for strain in config["strains"]:
+            results.append(f"results/searches/{search}/protinf/split_categories/{strain}/refseq.tsv")
+
+            if config["postproc"]["operon_mapper"]["enable"]:
+                results.append(f"results/searches/{search}/postproc/operon_mapper/input/{strain}.gff")
+
+    return results
+        
+
+def collect_conditional(wildcards):
+    results = []
+
+    for search in config["searches"]:
+        strains_with_novels = 0
+
+        for strain in config["strains"]:
+            checkpoint_output = checkpoints.protinf_split_categories.get(search=search, subsearch="", strain=strain).output
+
+            with open(checkpoint_output["refseq"], "r") as fi:
+                if len([True for line in fi]) > 1:
+                    results.append(f"results/searches/{search}/postproc/add_annot/{strain}/refseq.tsv")
+
+            with open(checkpoint_output["starts"], "r") as fi:
+                if len([True for line in fi]) > 1:
+                    results.append(f"results/searches/{search}/postproc/add_annot/{strain}/starts.tsv")
+
+            with open(checkpoint_output["novels"], "r") as fi:
+                if len([True for line in fi]) > 1:
+                    strains_with_novels += 1
+                    results.append(f"results/searches/{search}/postproc/novels/phyre2/input/{strain}.faa")
+
+        if strains_with_novels > 0:
+            results.append(f"results/searches/{search}/postproc/novels/novels_panaroo_postproc.tsv")
+
+
+    return results
+
+
+rule all:
+    input:
+        collect_unconditional,
+        collect_conditional
