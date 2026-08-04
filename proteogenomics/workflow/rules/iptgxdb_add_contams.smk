@@ -13,7 +13,7 @@ cat {input.contams} >> {output}
 
 rule iptgxdb_protparams:
     input:
-        "data/iptgxdbs/{iptgxdb}/{strain}/iptgxdb.fasta"
+        "results/iptgxdbs/{iptgxdb}/{strain}/iptgxdb_with_contams.fasta"
     output:
         "results/iptgxdbs/{iptgxdb}/{strain}/iptgxdb_protparams.tsv"
     conda:
