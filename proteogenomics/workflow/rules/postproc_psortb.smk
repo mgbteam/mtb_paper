@@ -5,11 +5,10 @@ rule postproc_psortb:
         folder = directory("results/searches/{search}/postproc/novels/psortb/{strain}"),
         txt = "results/searches/{search}/postproc/novels/psortb/{strain}/psortb.txt"
     params:
-        executable = config["postproc"]["psortb"]["executable"],
         flags = config["postproc"]["psortb"]["flags"]
     shell:
         """
 mkdir -p '{output.folder}'
-{params.executable} {params.flags} -i '{input}' -r '{output.folder}'
+workflow/scripts/psortb {params.flags} -i '{input}' -r '{output.folder}'
 mv '{output.folder}'/*.txt '{output.txt}'
         """

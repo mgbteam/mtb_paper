@@ -5,9 +5,6 @@ rule postproc_codon_gc_freq:
     output:
         table = "results/searches/{search}/postproc/novels/codon_gc_freq/{strain}.tsv",
         plot = report("results/searches/{search}/postproc/novels/codon_gc_freq/{strain}.png", category="{search}", subcategory="Novels Codon GC Freq.", labels={"Strain": "{strain}"})
-    params:
-        executable = config["postproc"]["psortb"]["executable"],
-        flags = config["postproc"]["psortb"]["flags"]
     conda:
         "../envs/python.yml"
     shell:

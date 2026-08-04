@@ -101,7 +101,6 @@ postproc:
   # Prediction of subcellular localization
   psortb:
     enable: True
-    executable: /scratch/src/PSORTb/psortb
     flags: -n
 
   # Identification of functional domains
