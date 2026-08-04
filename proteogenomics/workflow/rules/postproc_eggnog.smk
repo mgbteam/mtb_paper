@@ -13,7 +13,7 @@ rule postproc_eggnog:
         "../envs/eggnog.yml"
     shell:
         """
-mkdir -p '{output}'
+mkdir -p '{output.folder}'
 
 emapper.py \
 --cpu {threads} \
