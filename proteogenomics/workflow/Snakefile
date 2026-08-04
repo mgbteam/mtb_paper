@@ -62,24 +62,21 @@ def collect_conditional(wildcards):
         strains_with_novels = 0
 
         for strain in config["strains"]:
-            checkpoint_output = checkpoints.protinf_split_categories.get(search=search, subsearch="", strain=strain).output
-
-            with open(checkpoint_output["refseq"], "r") as fi:
+            with open(f"results/searches/{search}/protinf/split_categories/{strain}/refseq.tsv", "r") as fi:
                 if len([True for line in fi]) > 1:
                     results.append(f"results/searches/{search}/postproc/add_annot/{strain}/refseq.tsv")
 
-            with open(checkpoint_output["starts"], "r") as fi:
+            with open(f"results/searches/{search}/protinf/split_categories/{strain}/starts.tsv", "r") as fi:
                 if len([True for line in fi]) > 1:
                     results.append(f"results/searches/{search}/postproc/add_annot/{strain}/starts.tsv")
 
-            with open(checkpoint_output["novels"], "r") as fi:
+            with open(f"results/searches/{search}/protinf/split_categories/{strain}/novels.tsv", "r") as fi:
                 if len([True for line in fi]) > 1:
                     strains_with_novels += 1
                     results.append(f"results/searches/{search}/postproc/novels/phyre2/input/{strain}.faa")
 
         if strains_with_novels > 0:
             results.append(f"results/searches/{search}/postproc/novels/novels_panaroo_postproc.tsv")
-
 
     return results
 

@@ -1,4 +1,4 @@
-checkpoint protinf_split_categories:
+rule protinf_split_categories:
     input:
         "results/searches/{search}{subsearch}/protinf/pseudo_overlap/{strain}/proteins.tsv"
     output:

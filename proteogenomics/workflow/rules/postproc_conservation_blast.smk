@@ -39,6 +39,7 @@ rule postproc_conservation_blast_summary:
         summary = "results/searches/{search}/postproc/novels/conservation_blast/{strain}/summary.tsv",
         subtaxa_counts = "results/searches/{search}/postproc/novels/conservation_blast/{strain}/subtaxa_counts.tsv"
     params:
+        quoted_input = lambda wildcards, input: [f"'{f}'" for f in input],
         tax_levels = [f"'{t}'" for t in config["postproc"]["conservation_blast"]["tax_levels"]],
         min_coverage = config["postproc"]["conservation_blast"]["min_coverage"],
         min_identity = config["postproc"]["conservation_blast"]["min_identity"],
@@ -49,7 +50,7 @@ rule postproc_conservation_blast_summary:
     shell:
         """
 workflow/scripts/conservation_blast_summary.py \
--b {input} \
+-b {params.quoted_input} \
 -t {params.tax_levels} \
 -c {params.min_coverage} \
 -i {params.min_identity} \
