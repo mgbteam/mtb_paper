@@ -82,8 +82,10 @@ with open(args.table, "r") as fi:
         identifier = row["protein"].replace("|", "_")
         combined[identifier] = row
 
+novels_present = len(combined) > 0
+
 # Add annotation overlap
-if args.annotoverlap:
+if args.annotoverlap and novels_present:
     for file in args.annotoverlap:
         with open(file, "r") as fi:
             reader = csv.DictReader(fi, delimiter="\t")
@@ -95,7 +97,7 @@ if args.annotoverlap:
             colnames.extend([c for c in row if c != "protein"])
 
 # add conservation BLAST
-if args.conservationblast:
+if args.conservationblast and novels_present:
     with open(args.conservationblast, "r") as infile:
         reader = csv.DictReader(infile, delimiter="\t")
         colnames.extend(reader.fieldnames[1:])
@@ -105,7 +107,7 @@ if args.conservationblast:
             combined[identifier].update(row)
 
 # add Phyre2
-if args.phyre2:
+if args.phyre2 and novels_present:
     colnames.extend(["Phyre2 Confidence (%)", "Phyre2 Hit info 2"])
 
     with open(args.phyre2, "r") as fi:
@@ -125,7 +127,7 @@ if args.phyre2:
                 combined[identifier]["Phyre2 Hit info 2"] = row["Hit info 2"].split(":")[-1]
 
 # add eggNOG
-if args.eggnog:
+if args.eggnog and novels_present:
     eggnog_cols = ["evalue", "score", "Description", "Preferred_name"]
     colnames.extend(["eggNOG " + col for col in eggnog_cols])
 
@@ -139,7 +141,7 @@ if args.eggnog:
                 combined[identifier].update({"eggNOG " + col: row[col] for col in eggnog_cols})
 
 # add hhsuite
-if args.hhsuite:
+if args.hhsuite and novels_present:
     with open(args.hhsuite, "r") as infile:
         reader = csv.DictReader(infile, delimiter="\t")
         colnames.extend(reader.fieldnames[1:])
@@ -150,7 +152,7 @@ if args.hhsuite:
 
 
 # add AMP Scanner Version 2
-if args.ampscanner2:
+if args.ampscanner2 and novels_present:
     colnames.extend(["AMP2 Class", "AMP2 Probability", "Phobius"])
 
     with open(args.ampscanner2, "r") as infile:
@@ -167,7 +169,7 @@ if args.ampscanner2:
 
 
 # add InterProScan
-if args.interpro:
+if args.interpro and novels_present:
     colnames.extend(["TMHMM", "SignalP", "Phobius"])
 
     with open(args.interpro, "r") as fi:
@@ -200,7 +202,7 @@ if args.interpro:
                 row["Phobius"] = ";".join(row["Phobius"])
 
 # add LipoP
-if args.lipop:
+if args.lipop and novels_present:
     colnames.extend(["LipoP", "LipoP Score"])
 
     with open(args.lipop, "r") as fi:
@@ -216,7 +218,7 @@ if args.lipop:
                 combined[identifier]["LipoP Score"] = row[5]
 
 # add PsortB
-if args.psortb:
+if args.psortb and novels_present:
     colnames.extend(["PSORTb Localization", "PSORTb Score"])
 
     with open(args.psortb, "r") as infile:
@@ -239,7 +241,7 @@ if args.psortb:
             line = next(infile, None)
 
 # add codon GC frequency analysis results
-if args.codongcfreq:
+if args.codongcfreq and novels_present:
     colnames.extend(["Overlap", "Overlap Type", "Overlap Genes", "Overlap Annots", "Selection"])
 
     with open(args.codongcfreq, "r") as infile:
@@ -255,7 +257,7 @@ if args.codongcfreq:
             combined[identifier]["Selection"] = selection
 
 # add OperonMapper results
-if args.operonmapper:
+if args.operonmapper and novels_present:
     colnames.extend(["OperonMapper COG", "OperonMapper BLASTP", "Operon Genes", "Operon Functions"])
 
     with open(f"{args.operonmapper}/list_of_operons", "r") as infile:
@@ -306,7 +308,7 @@ if args.operonmapper:
                 combined[identifier]["OperonMapper BLASTP"] = row["product"]
 
 # add alphafold confidence
-if args.alphafold:
+if args.alphafold and novels_present:
     with open(args.alphafold, "r") as fi:
         reader = csv.reader(fi, delimiter="\t")
         colnames.append("alphafold confidence")

@@ -16,10 +16,15 @@ rule postproc_interpro:
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib"
 mkdir -p {output.folder}
 
-"{params.folder}/interproscan.sh" \
--cpu {threads} \
--i {input} \
--d {output.folder} \
--f TSV,JSON,GFF3 \
-{params.flags}
+if [ -s '{input}' ]; then
+    "{params.folder}/interproscan.sh" \
+        -cpu {threads} \
+        -i '{input}' \
+        -d '{output.folder}' \
+        -f TSV,JSON,GFF3 \
+        -T /tmp \
+        {params.flags}
+else
+    touch '{output.tsv}'
+fi
         """

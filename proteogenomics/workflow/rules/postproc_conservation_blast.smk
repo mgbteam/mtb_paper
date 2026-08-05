@@ -49,13 +49,18 @@ rule postproc_conservation_blast_summary:
         "../envs/ete3.yml"
     shell:
         """
-workflow/scripts/conservation_blast_summary.py \
--b {params.quoted_input} \
--t {params.tax_levels} \
--c {params.min_coverage} \
--i {params.min_identity} \
--e {params.max_evalue} \
--o {output.summary} \
--s {output.subtaxa_counts} \
-{params.taxdbflag}
+if [ -n '{input}' ]; then
+    workflow/scripts/conservation_blast_summary.py \
+        -b {params.quoted_input} \
+        -t {params.tax_levels} \
+        -c {params.min_coverage} \
+        -i {params.min_identity} \
+        -e {params.max_evalue} \
+        -o {output.summary} \
+        -s {output.subtaxa_counts} \
+        {params.taxdbflag}
+else
+    touch '{output.summary}'
+    touch '{output.subtaxa_counts}'
+fi
         """

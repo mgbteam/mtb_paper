@@ -203,7 +203,11 @@ def calc_average_gc_frequencies(nuc_counts_total):
     for i in range(3):
         total_gc = nuc_counts_total[i]["GC"]
         total_nt = nuc_counts_total[i]["GC"] + nuc_counts_total[i]["AT"]
-        gc_freqs.append(total_gc / total_nt)
+
+        if total_nt > 0:
+            gc_freqs.append(total_gc / total_nt)
+        else:
+            gc_freqs.append(0)
 
     return gc_freqs
 

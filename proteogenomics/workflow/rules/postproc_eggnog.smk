@@ -15,14 +15,18 @@ rule postproc_eggnog:
         """
 mkdir -p '{output.folder}'
 
-emapper.py \
---cpu {threads} \
---data_dir '{params.folder}' \
---scratch_dir /tmp \
---temp_dir /tmp \
-{params.flags} \
--i '{input}' \
--o eggnog \
---output_dir '{output.folder}' \
---override
+if [ -s '{input}' ]; then
+    emapper.py \
+        --cpu {threads} \
+        --data_dir '{params.folder}' \
+        --scratch_dir /tmp \
+        --temp_dir /tmp \
+        {params.flags} \
+        -i '{input}' \
+        -o eggnog \
+        --output_dir '{output.folder}' \
+        --override
+else
+    touch '{output.annots}'
+fi
         """

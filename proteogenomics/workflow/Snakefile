@@ -39,7 +39,7 @@ include: "rules/postproc_panaroo.smk"
 include: "rules/postproc_integrate_panaroo.smk"
 
 
-def collect_unconditional(wildcards):
+def collect_all(wildcards):
     results = []
 
     for search in config["searches"]:
@@ -47,41 +47,19 @@ def collect_unconditional(wildcards):
         results.append(f"results/searches/{search}/postproc/panaroo/gene_presence_absence.tsv")
 
         for strain in config["strains"]:
-            results.append(f"results/searches/{search}/protinf/split_categories/{strain}/refseq.tsv")
+            results.append(f"results/searches/{search}/postproc/add_annot/{strain}/refseq.tsv")
+            results.append(f"results/searches/{search}/postproc/add_annot/{strain}/starts.tsv")
+            results.append(f"results/searches/{search}/postproc/novels/novels_panaroo_postproc.tsv")
+
+            if config["postproc"]["phyre2"]["enable"]:
+                results.append(f"results/searches/{search}/postproc/novels/phyre2/input/{strain}.faa")
 
             if config["postproc"]["operon_mapper"]["enable"]:
                 results.append(f"results/searches/{search}/postproc/operon_mapper/input/{strain}.gff")
-
-    return results
-        
-
-def collect_conditional(wildcards):
-    results = []
-
-    for search in config["searches"]:
-        strains_with_novels = 0
-
-        for strain in config["strains"]:
-            with open(f"results/searches/{search}/protinf/split_categories/{strain}/refseq.tsv", "r") as fi:
-                if len([True for line in fi]) > 1:
-                    results.append(f"results/searches/{search}/postproc/add_annot/{strain}/refseq.tsv")
-
-            with open(f"results/searches/{search}/protinf/split_categories/{strain}/starts.tsv", "r") as fi:
-                if len([True for line in fi]) > 1:
-                    results.append(f"results/searches/{search}/postproc/add_annot/{strain}/starts.tsv")
-
-            with open(f"results/searches/{search}/protinf/split_categories/{strain}/novels.tsv", "r") as fi:
-                if len([True for line in fi]) > 1:
-                    strains_with_novels += 1
-                    results.append(f"results/searches/{search}/postproc/novels/phyre2/input/{strain}.faa")
-
-        if strains_with_novels > 0:
-            results.append(f"results/searches/{search}/postproc/novels/novels_panaroo_postproc.tsv")
 
     return results
 
 
 rule all:
     input:
-        collect_unconditional,
-        collect_conditional
+        collect_all

@@ -40,8 +40,12 @@ rule postproc_hhsuite_summary:
         "../envs/python.yml"
     shell:
         """
-workflow/scripts/hhsuite_summary.py \
--i {params.quoted_input} \
--e {params.exclude} \
--o {output}
+if [ -n '{input}' ]; then
+    workflow/scripts/hhsuite_summary.py \
+        -i {params.quoted_input} \
+        -e {params.exclude} \
+        -o '{output}'
+else
+    touch '{output}'
+fi
         """
