@@ -5,7 +5,7 @@ rule postproc_integrate_panaroo:
     output:
         "results/searches/{search}/postproc/novels/novels_panaroo_postproc.tsv"
     params:
-        input_flags = lambda wildcards, input: [f"-p '{os.path.splitext(os.path.basename(f))[0]}' '{f}'" for f in input],
+        input_flags = lambda wildcards, input: [f"-p '{os.path.splitext(os.path.basename(f))[0]}' '{f}'" for f in input.novels],
         tax_levels = config["postproc"]["conservation_blast"]["tax_levels"]
     conda:
         "../envs/python.yml"
