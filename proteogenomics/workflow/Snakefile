@@ -12,6 +12,7 @@ include: "rules/search_percolator.smk"
 include: "rules/protinf_philosopher_proteinprophet.smk"
 include: "rules/protinf_philosopher_filter.smk"
 include: "rules/protinf_philosopher_abacus.smk"
+include: "rules/protinf_philosopher_pepclass.smk"
 
 include: "rules/protinf_protparam_filter.smk"
 include: "rules/protinf_collapse_extensions.smk"

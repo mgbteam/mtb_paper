@@ -1,6 +1,6 @@
 rule protinf_protparam_add:
     input:
-        proteins = "results/searches/{search}{subsearch}/protinf/abacus/{strain}/proteins.reformat.tsv",
+        proteins = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/proteins.uniq.tsv",
         protparams = lambda wildcards: "results/iptgxdbs/" + get_iptgxdb(wildcards.search) + "/{strain}/iptgxdb_protparams.tsv"
     output:
         "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}/proteins.uniq.tsv"
