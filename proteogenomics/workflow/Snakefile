@@ -67,9 +67,8 @@ def collect_all(wildcards):
 
                 for subset in ["all", "refseq", "novels"]:
                     fdpdir = f"results/searches/{search}/entrapment/fdrbench/plot_fdp/{strain}"
-                    results = [f"{fdpdir}/{s}/{subset}_fdp.png" for s in samples]
-
-                    results.extend(results)
+                    results_fdp = [f"{fdpdir}/{s}/{subset}_fdp.png" for s in samples]
+                    results.extend(results_fdp)
 
                 results.append(f"results/searches/{search}/entrapment/protinf/protparam_filter/{strain}/proteins.uniq.tsv")
 
