@@ -1,9 +1,9 @@
 # *M. tuberculosis* proteogenomics Snakemake pipeline
-This Snakemake pipeline performs a proteogenomic analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)). The workflow combines genome annotation processing, peptide-spectrum matching, protein inference, and downstream annotation and structural analyses to identify and prioritize novel proteins.
+This Snakemake pipeline performs a proteogenomic analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)). The workflow combines genome annotation processing, peptide-spectrum matching, protein inference, stringent filtering and downstream annotation and structural analyses to identify and prioritize novel proteins.
 
-The pipeline converts multiple annotation sources to create 2 integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) for each strain: a standard iPtgxDB ([Omasits et al. 2017](https://doi.org/10.1101/gr.218255.116)) and a much smaller custom iPtgxDB based on Rib-seq data ([Hadjeras et al. 2023](https://doi.org/10.1093/femsml/uqad012)), here using orthologs of Ribo-seq identifications from strain H37Rv ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980)). Mass spectrometry data from a Bruker timsTOF Pro device ([PRIDE Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)) is then searched for each strain against the respective iPtgxDBs using [MSFragger](https://msfragger.nesvilab.org/), relying on [MSBooster](https://doi.org/10.1038/s41467-023-40129-9) and [Percolator](https://github.com/percolator/percolator) for accurate peptide identification. Protein inference and FDR filtering is achieved using [Philosopher](https://philosopher.nesvilab.org/), followed by additional stringent filtering as described ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)).
+The pipeline converts multiple annotation sources to create 2 integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) for each strain: a standard iPtgxDB ([Omasits et al. 2017](https://doi.org/10.1101/gr.218255.116)) and a much smaller custom iPtgxDB based on Ribo-seq data ([Hadjeras et al. 2023](https://doi.org/10.1093/femsml/uqad012)), here using orthologs of Ribo-seq identifications from strain H37Rv ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980)). Mass spectrometry data from a Bruker timsTOF Pro device ([PRIDE Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)) is then searched for each strain against the respective iPtgxDBs using [MSFragger](https://msfragger.nesvilab.org/), relying on [MSBooster](https://doi.org/10.1038/s41467-023-40129-9) and [Percolator](https://github.com/percolator/percolator) for accurate peptide identification. Protein inference and FDR filtering is achieved using [Philosopher](https://philosopher.nesvilab.org/), followed by additional stringent filtering as described ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)), including the selection of unambiguous peptides based on the PeptideClassifier software ([Qeli and Anhres, 2010](https://doi.org/10.1038/nbt0710-647)) extended for prokaryotic proteogenomics ([Omasits et al, 2017](https://doi.org/10.1101/gr.218255.116)).
 
-Pseudogenes with confirmed expression, corrected start sites of annotated genes and completely novel genes are reported separately. Novel gene candidates are further analyzed, including the overlap with pseudogenes and newer annotations, signal peptide and subcellular localization prediction, functional annotation, and integration with Panaroo-based pangenome information.
+Novel genes not annotated before, corrected start sites of annotated genes and pseudogenes with confirmed expression are reported separately. Novel gene candidates are further analyzed, including the overlap with pseudogenes and newer annotations, signal peptide and subcellular localization prediction, functional annotation, and integration with Panaroo-based pangenome information.
 
 [TOC]: #
 ## Table of Contents
@@ -24,15 +24,17 @@ Pseudogenes with confirmed expression, corrected start sites of annotated genes 
 ### Automatically Installed
 By default, dependencies are installed automatically using conda when running the pipeline for the first time, except for FragPipe and dependencies used for optional downstream analyses of the identified novel proteins. The path of each manually installed software has to be configured in `config/config.yaml`. To disable automatic dependency management, remove `--use-conda` from `run.sh` and make sure the required tools are installed manually.
 
+If PSORTb is enabled, make sure to [install Docker](https://docs.docker.com/engine/install) and also enable [management of Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall).
+
 ### Manually Installed
 #### Mandatory
-FragPipe currently has to be installed manually. This also includes the installation of MSFragger and Philosopher, which can be performed using FragPipes GUI after installation. The following versions were used for the pipeline:
+FragPipe, MSFragger, Philosopher and have to be installed manually. While MSFragger can be installed from within the FragPipe GUI, Philosopher should be installed manually as a newer version was used here to calculate protein-level q-values. The following versions were used for the pipeline:
 
 |Software|Version|
 |--------|------:|
 |[FragPipe](https://fragpipe.nesvilab.org)|22.0|
 |[MSFragger](https://github.com/Nesvilab/MSFragger)|4.1|
-|[Philosopher](https://github.com/Nesvilab/philosopher)|5.1|
+|[Philosopher](https://github.com/Nesvilab/philosopher)|5.1.2|
 
 All other dependencies of FragPipe are either automatically installed with conda or already provided with FragPipe. These include:
 
@@ -49,21 +51,20 @@ These dependencies have to be installed and the path adjusted in `config/config.
 
 Either the software itself has be installed manually:
 
-|Software|Version|Notes|
-|--------|------:|-----|
-|[amp-scanner](https://github.com/dan-veltri/amp-scanner-v2)|2|Antimicrobial peptide prediction|
-|[InterProScan](https://github.com/ebi-pf-team/interproscan)|5.59-91.0|Identification of functional domains
-|[LipoP](https://services.healthtech.dtu.dk/services/LipoP-1.0/)|1.0a|Lipoprotein and signal peptide detection|
-|[PSORTb](https://psort.org/psortb)|3.0|Prediction of subcellular localization|
+|Software|Version|Size|Notes|
+|--------|------:|---:|-----|
+|[FDRBench](https://github.com/Noble-Lab/FDRBench)|0.0.4|74 Mb|Estimation of actual subset FDR|
+|[amp-scanner](https://github.com/dan-veltri/amp-scanner-v2)|2|28 Mb|Antimicrobial peptide prediction|
+|[InterProScan](https://github.com/ebi-pf-team/interproscan)|5.59-91.0|47 Gb|Identification of functional domains
+|[LipoP](https://services.healthtech.dtu.dk/services/LipoP-1.0/)|1.0a|632 Kb|Lipoprotein and signal peptide detection|
 
 Or the software is automatically installed with conda but a dataset has to be downloaded manually:
 
-|Dataset|Software|Notes|
-|-------|-------:|-----|
-|[021820_FULL_MODEL](https://github.com/dan-veltri/amp-scanner-v2/blob/main/trained-models/021820_FULL_MODEL.h5)|[amp-scanner](https://github.com/dan-veltri/amp-scanner-v2)|Antimicrobial peptide prediction|
-|[core_nt](https://ftp.ncbi.nih.gov/blast/db)|[tblastn](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html)|Conservation BLAST
-|[eggNOG DB 5.0.2](http://eggnog5.embl.de/download/emapperdb-5.0.2/)|[eggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)|Functional annotation by orthology
-|[UniRef30_2023_02](https://storage.googleapis.com/alphafold-databases/v2.3/UniRef30_2021_03.tar.gz)|[hhsuite](https://github.com/soedinglab/hh-suite)|Search for homologous proteins
+|Dataset|Size|Software|Notes|
+|-------|---:|-------:|-----|
+|[core_nt](https://ftp.ncbi.nih.gov/blast/db)|288 Gb|[tblastn](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html)|Conservation BLAST
+|[eggNOG DB 5.0.2](http://eggnog5.embl.de/download/emapperdb-5.0.2/)|49-90 Gb|[eggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)|Functional annotation by orthology
+|[UniRef30_2023_02](https://storage.googleapis.com/alphafold-databases/v2.3/UniRef30_2021_03.tar.gz)|328 Gb|[hhsuite](https://github.com/soedinglab/hh-suite)|Search for homologous proteins
 
 ## Input Data and Configuration
 ### Provided Data to Reproduce Results
