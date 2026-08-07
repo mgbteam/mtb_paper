@@ -12,7 +12,7 @@ rawfiles:
 # Protein identifier prefixes that mark RefSeq proteins and contaminants
 prefixes:
   refseq: FF
-  contam: sp|
+  contam: 'sp|'
 
 
 # Default settings used for all searches if not specified otherwise per search
@@ -34,23 +34,32 @@ search_default_settings:
     fragpipe_classpath: /scratch/src/FragPipe-22.0/lib
     threads: 10
 
-    # Optionally enable MSBooster for more accurate in silico spectrum prediction
-    msbooster:
-      enable: True
-      msbooster_classpath: /scratch/src/FragPipe-22.0/tools/MSBooster-1.2.31.jar
-      batmass_classpath: /scratch/src/FragPipe-22.0/tools/batmass-io-1.33.4.jar
-      config: config/msbooster/msbooster_params.txt
-      threads: 10
-      memory: 48G
+  # Optionally enable MSBooster for more accurate in silico spectrum prediction
+  msbooster:
+    enable: True
+    msbooster_classpath: /scratch/src/FragPipe-22.0/tools/MSBooster-1.2.31.jar
+    batmass_classpath: /scratch/src/FragPipe-22.0/tools/batmass-io-1.33.4.jar
+    config: config/msbooster/msbooster_params.txt
+    threads: 10
+    memory: 48G
+
+  # Optionally enable entrapment based filtering of novel proteins with FDRBench
+  entrapment:
+    enable: True
+    jar: /scratch/bh/.local/apps/fdrbench-0.0.4/fdrbench-0.0.4.jar
+    db_flags: -I2L -fix_nc c -decoy -enzyme 2
+    fdp_flags: -fold 1
 
   # Protein inference and FDR filtering with Philosopher
   philosopher:
-    executable: /scratch/src/FragPipe-22.0/tools/Philosopher/philosopher-v5.1.1
+    executable: /scratch/src/philosopher-5.1.2/philosopher
     peptideprophet_flags: --decoyprobs --ppm --accmass --nonparam --expectscore
     proteinprophet_flags: --maxppmdiff 2000000
     filter_flags: --sequential --razor --picked --prot 0.01
+    filter_flags_entrapment: --sequential --razor --picked --ion 1.0 --psm 1.0 --pep 1.0 --prot 1.0 --pepProb 0.0 --protProb 0.0
     report_flags: --decoys
     abacus_flags: --razor --picked --reprint
+    abacus_flags_entrapment: --razor --picked --reprint
 
   # Settings for additional ad-hoc filters to limit FDR of novel proteins
   filter:

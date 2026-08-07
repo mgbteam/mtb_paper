@@ -4,10 +4,10 @@ rule msbooster:
     output:
         directory("results/searches/{search}{subsearch}/search/msbooster/{strain}")
     threads:
-        lambda wildcards: get_search_config_value(wildcards.search, "percolator/msbooster/threads")
+        lambda wildcards: get_search_config_value(wildcards.search, "msbooster/threads")
     params:
         msfragger_config = lambda wildcards: get_search_config_value(wildcards.search, "msfragger/config"),
-        settings = lambda wildcards: get_search_config_section(wildcards.search, "percolator/msbooster")
+        settings = lambda wildcards: get_search_config_section(wildcards.search, "msbooster")
     conda:
         "../envs/openjdk.yml"
     shell:

@@ -28,6 +28,10 @@ parser.add_argument(
         "-d", "--decoy-prefix", default="rev_",
         help="Decoy ID prefix (default: 'rev_')"
 )
+parser.add_argument(
+        "-e", "--entrapment-suffix", default="_p_target",
+        help="Entrapment ID suffix (default: '_p_target')"
+)
 args = parser.parse_args()
 
 proteins = SeqIO.to_dict(SeqIO.parse(args.iptgxdb, "fasta"))
@@ -35,7 +39,8 @@ peptides = {}
 
 
 def cluster_from_iptgxdb_id(identifier):
-    pos = identifier.split("|")[-1].split("_")
+    baseid = identifier.removesuffix(args.entrapment_suffix)
+    pos = baseid.split("|")[-1].split("_")
     chrom = "_".join(pos[:-5])
     stop = int(pos[-4])
     strand = pos[-3][0]
@@ -65,12 +70,11 @@ with open(args.output, "w") as fo:
     writer = csv.writer(fo, delimiter="\t")
 
     for pep, prots in peptides.items():
-        if any([p.startswith(args.decoy_prefix) for p in prots]):
-            pepclass = "decoy"
-            continue
-
         if any([p.startswith(args.contam_prefix) for p in prots]):
-            peplass = "contam"
+            writer.writerow([pep, "contam", ";".join(prots)])
+            continue
+        if any([p.startswith(args.decoy_prefix + args.contam_prefix) for p in prots]):
+            writer.writerow([pep, "contam", ";".join(prots)])
             continue
 
         pepclass = "unique"

@@ -1,6 +1,6 @@
 rule protinf_pepclass_basic:
     input:
-        iptgxdb = lambda wildcards: "data/iptgxdbs/" + get_iptgxdb(wildcards.search) + "/{strain}/iptgxdb.fasta",
+        dbdir = "results/searches/{search}{subsearch}/search/database/{strain}",
         folder = get_filter_folders_for_strain
     output:
         "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/pepclass.tsv"
@@ -11,12 +11,15 @@ rule protinf_pepclass_basic:
         "../envs/python.yml"
     shell:
         """
+db=$(find '{input.dbdir}'/ -name *.fas)
+
 workflow/scripts/pepclass_basic.py \
--i '{input.iptgxdb}' \
+-i "$db" \
 -p {params.files} \
 -o '{output}' \
 -c '{params.contam_prefix}' \
--d 'rev_'
+-d 'rev_' \
+-e '_p_target'
         """
 
 

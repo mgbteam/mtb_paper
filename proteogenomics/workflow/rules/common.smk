@@ -57,7 +57,11 @@ def get_search_config_value(search, path):
 
 
 def is_msbooster_enabled(search):
-    return get_search_config_value(search, "percolator/msbooster/enable")
+    return get_search_config_value(search, "msbooster/enable")
+
+
+def is_entrapment_enabled(search):
+    return get_search_config_value(search, "entrapment/enable")
 
 
 def get_iptgxdb(search):

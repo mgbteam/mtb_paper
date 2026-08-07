@@ -20,7 +20,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-pepclasses = ["unique", "ambiguous"]
+pepclasses = ["unique", "ambiguous", "contam"]
 proteins = {}
 
 with open(args.pepclass, "r") as fi:
@@ -31,8 +31,7 @@ with open(args.pepclass, "r") as fi:
             if protein not in proteins:
                 proteins[protein] = {c: 0 for c in pepclasses}
 
-            if row[1] not in ["contam", "decoy"]:
-                proteins[protein][row[1]] += 1
+            proteins[protein][row[1]] += 1
 
 with open(args.table, "r") as fi, open(args.outfile, "w") as fo:
     reader = csv.DictReader(fi, delimiter="\t")

@@ -1,3 +1,12 @@
+def get_philosopher_abacus_flags(wildcards):
+    if wildcards.subsearch.startswith("/entrapment"):
+        key = "abacus_flags_entrapment"
+    else:
+        key = "abacus_flags"
+
+    return get_search_config_value(wildcards.search, f"philosopher/{key}")
+
+
 rule protinf_abacus_run:
     input:
         protxmldir = "results/searches/{search}{subsearch}/protinf/proteinprophet/{strain}",
@@ -8,15 +17,16 @@ rule protinf_abacus_run:
         "results/searches/{search}{subsearch}/protinf/abacus/{strain}/log.txt"
     params:
         input_relative = lambda wildcards: [f"{workflow.basedir}/../{f}" for f in get_filter_folders_for_strain(wildcards)],
-        settings = lambda wildcards: get_search_config_section(wildcards.search, "philosopher")
+        executable = lambda wildcards: get_search_config_value(wildcards.search, "philosopher/executable"),
+        abacus_flags = get_philosopher_abacus_flags
     shell:
         """
 outdir="$(dirname '{output}')"
 mkdir -p "$outdir"
 cd "$outdir"
 cp {workflow.basedir}/../{input.protxmldir}/interact.prot.xml combined.prot.xml
-{params.settings[executable]} workspace --init --nocheck --analytics false 2>&1 | tee {workflow.basedir}/../{log}
-{params.settings[executable]} abacus {params.settings[abacus_flags]} --tag rev_ --protein {params.input_relative} 2>&1 | tee -a {workflow.basedir}/../{log}
+{params.executable} workspace --init --nocheck --analytics false 2>&1 | tee {workflow.basedir}/../{log}
+{params.executable} abacus {params.abacus_flags} --tag rev_ --protein {params.input_relative} 2>&1 | tee -a {workflow.basedir}/../{log}
         """
 
 

@@ -12,10 +12,6 @@ parser.add_argument(
         help="TSV table of identified proteins"
 )
 parser.add_argument(
-        "-f", "--fdpfiles", nargs="+",
-        help="files containing FDP results per sample"
-)
-parser.add_argument(
         "-a", "--annotoverlap", nargs="+",
         help="Annotation overlap TSV results"
 )

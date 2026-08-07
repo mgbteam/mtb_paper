@@ -45,8 +45,8 @@ with open(args.input, "r") as fi:
             discarded.append(row)
 
 print(f"selected:  {len(selected)}")
-print(f"discarded: {len(discarded)}\n")
-print(f"contams: {len(contams)}\n")
+print(f"discarded: {len(discarded)}")
+print(f"contams: {len(contams)}")
 
 with open(args.output, "w") as fo:
     writer = csv.DictWriter(fo, delimiter="\t", fieldnames=cols)
