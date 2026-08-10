@@ -3,7 +3,7 @@ rule protinf_pepclass_basic:
         dbdir = "results/searches/{search}{subsearch}/search/database/{strain}",
         folder = get_filter_folders_for_strain
     output:
-        "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/pepclass.tsv"
+        "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/pepclass.tsv"
     params:
         files = lambda wildcards: [f'{d}/peptide.tsv' for d in get_filter_folders_for_strain(wildcards)],
         contam_prefix = config["prefixes"]["contam"]
@@ -23,12 +23,21 @@ workflow/scripts/pepclass_basic.py \
         """
 
 
+def get_pepclass_input(wildcards):
+    basedir = f"results/searches/{wildcards.search}{wildcards.subsearch}/protinf"
+
+    if wildcards.subsearch.startswith("/entrapment"):
+        return f"{basedir}/fdrbench/convert/{wildcards.strain}{wildcards.subsample}/protein.reformat.tsv"
+    else:
+        return f"{basedir}/abacus/{wildcards.strain}{wildcards.subsample}/proteins.reformat.tsv"
+
+
 rule protinf_pepclass_add:
     input:
-        proteins = "results/searches/{search}{subsearch}/protinf/abacus/{strain}/proteins.reformat.tsv",
-        pepclass = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/pepclass.tsv"
+        proteins = get_pepclass_input,
+        pepclass = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/pepclass.tsv"
     output:
-        "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/protclass.tsv"
+        "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/protclass.tsv"
     conda:
         "../envs/python.yml"
     shell:
@@ -42,11 +51,11 @@ workflow/scripts/add_pepclass.py \
 
 rule protinf_pepclass_filter:
     input:
-        "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/protclass.tsv"
+        "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/protclass.tsv"
     output:
-        proteins_uniq = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/proteins.uniq.tsv",
-        contams = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/proteinsContams.tsv",
-        prots3b = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/proteins3b.tsv"
+        proteins_uniq = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/proteins.uniq.tsv",
+        contams = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/proteinsContams.tsv",
+        prots3b = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/proteins3b.tsv"
     params:
         contam_prefix = config["prefixes"]["contam"]
     conda:

@@ -1,6 +1,6 @@
-rule entrapment_calc_prot_fdp_percolator:
+rule entrapment_calc_prot_fdp:
     input:
-        "results/searches/{search}/entrapment/fdrbench/convert/{strain}/{sample}/{subset}.tsv"
+        "results/searches/{search}/entrapment/protinf/split_categories/{strain}/{sample}/{subset}.tsv"
     output:
         "results/searches/{search}/entrapment/fdrbench/calc_fdp/{strain}/{sample}/{subset}_fdp.csv"
     params:

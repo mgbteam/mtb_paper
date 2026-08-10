@@ -14,13 +14,17 @@ parser.add_argument(
         "-o", "--output", metavar="FILE", required=True,
         help="Output protein tsv file with collapsed clusters"
 )
+parser.add_argument(
+        "-e", "--entrapment-suffix", metavar="STR", default="",
+        help="Optional flag to handle IDs with entrapment suffix"
+)
 args = parser.parse_args()
 
 cols_to_sum = [
     "total - psms",
     "total - peptides",
     "total - spectra",
-    "1a", "1b", "2a", "2b", "3a", "3b",
+    "unique", "ambiguous", "contam",
 ]
 
 clusters = {}
@@ -57,7 +61,7 @@ for refid, entries in clusters.items():
         outrows.append(entries[0])
     else:
         # if multiple entries are present merge values of shorter cluster entries to longest one
-        entries_by_size = sorted(entries, key=lambda row: int(row["protein"].split("_")[-1]))
+        entries_by_size = sorted(entries, key=lambda row: int(row["protein"].removesuffix(args.entrapment_suffix).split("_")[-1]))
         longest_entry = entries_by_size[-1]
         base = longest_entry["protein"].split("|")[0]
 
@@ -88,7 +92,7 @@ for refid, entries in clusters.items():
 
 # update lengths to be the total length of the protein, not that of the iPtgxDB entry
 for outrow in outrows:
-    outrow["sequence length"] = int(outrow["protein"].split("_")[-1])
+    outrow["sequence length"] = int(outrow["protein"].removesuffix(args.entrapment_suffix).split("_")[-1])
 
 with open(args.output, "w") as fo:
     writer = csv.DictWriter(fo, delimiter="\t", fieldnames=cols)

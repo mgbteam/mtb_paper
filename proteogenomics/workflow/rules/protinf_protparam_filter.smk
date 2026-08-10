@@ -1,20 +1,21 @@
 rule protinf_protparam_add:
     input:
-        proteins = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}/proteins.uniq.tsv",
+        proteins = "results/searches/{search}{subsearch}/protinf/pepclass_filter/{strain}{subsample}/proteins.uniq.tsv",
         protparams = lambda wildcards: "results/iptgxdbs/" + get_iptgxdb(wildcards.search) + "/{strain}/iptgxdb_protparams.tsv"
     output:
-        "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}/proteins.uniq.tsv"
+        "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}{subsample}/proteins.uniq.tsv"
     conda:
         "../envs/python.yml"
     shell:
         """
-workflow/scripts/combine_tables.py \
--l 'protein' \
--r 'Protein' \
--m 'left' \
+workflow/scripts/add_protparams.py \
+-t '{input.proteins}' \
+-p '{input.protparams}' \
 -o '{output}' \
-'{input.proteins}' \
-'{input.protparams}'
+-T 'protein' \
+-P 'Protein' \
+-d 'rev_' \
+-e '_p_target'
         """
 
 
@@ -29,12 +30,12 @@ def create_protparam_threshold_flags(search):
 
 rule protinf_protparam_filter:
     input:
-        proteins = "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}/proteins.uniq.tsv"
+        proteins = "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}{subsample}/proteins.uniq.tsv"
     output:
-        selected = "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}/proteins.selected.tsv",
-        discarded = "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}/proteins.discarded.tsv"
+        selected = "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}{subsample}/proteins.selected.tsv",
+        discarded = "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}{subsample}/proteins.discarded.tsv"
     log:
-        "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}/log.txt"
+        "results/searches/{search}{subsearch}/protinf/protparam_filter/{strain}{subsample}/log.txt"
     params:
         threshold_flags = lambda wildcards: create_protparam_threshold_flags(wildcards.search)
     conda:

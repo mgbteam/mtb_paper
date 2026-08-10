@@ -9,7 +9,7 @@ include: "rules/search_msfragger.smk"
 include: "rules/search_msbooster.smk"
 include: "rules/search_percolator.smk"
 
-include: "rules/entrapment_percolator_convert.smk"
+include: "rules/entrapment_convert_prots.smk"
 include: "rules/entrapment_calc_fdp.smk"
 include: "rules/entrapment_plot_fdp.smk"
 
@@ -65,12 +65,10 @@ def collect_all(wildcards):
             if is_entrapment_enabled(search):
                 samples = get_strain_samples(strain)
 
-                for subset in ["all", "refseq", "novels"]:
+                for subset in ["all", "refseq", "novelty"]:
                     fdpdir = f"results/searches/{search}/entrapment/fdrbench/plot_fdp/{strain}"
                     results_fdp = [f"{fdpdir}/{s}/{subset}_fdp.png" for s in samples]
                     results.extend(results_fdp)
-
-                results.append(f"results/searches/{search}/entrapment/protinf/protparam_filter/{strain}/proteins.uniq.tsv")
 
     return results
 

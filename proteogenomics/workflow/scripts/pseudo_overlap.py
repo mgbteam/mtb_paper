@@ -24,6 +24,10 @@ def parse_arguments():
         "-d", "--details", metavar="TSV",
         help="output details about pseudogene assignments (optional)"
     )
+    parser.add_argument(
+        "-e", "--entrapment-suffix", metavar="STR", default="",
+        help="Optional flag to handle IDs with entrapment suffix"
+    )
     return parser.parse_args()
 
 
@@ -60,7 +64,7 @@ def read_pseudogene_gff(path):
     return pseudogenes
 
 
-def check_pseudo_overlap(pseudogenes, proteins, output, details):
+def check_pseudo_overlap(pseudogenes, proteins, output, details, entrapment_suffix):
     detail_rows = []
     reassigned = 0
 
@@ -75,7 +79,7 @@ def check_pseudo_overlap(pseudogenes, proteins, output, details):
                 writer.writerow(row)
                 continue
 
-            pos_str = row["protein"].split("|")[-1].split("_")
+            pos_str = row["protein"].removesuffix(entrapment_suffix).split("|")[-1].split("_")
             sequence = "_".join(pos_str[:-5])
             start = int(pos_str[-5])
             end = int(pos_str[-4])
@@ -176,7 +180,7 @@ def check_pseudo_overlap(pseudogenes, proteins, output, details):
 def main():
     args = parse_arguments()
     pseudogenes = read_pseudogene_gff(args.annot)
-    check_pseudo_overlap(pseudogenes, args.proteins, args.output, args.details)
+    check_pseudo_overlap(pseudogenes, args.proteins, args.output, args.details, args.entrapment_suffix)
 
 
 if __name__ == "__main__":
