@@ -1,7 +1,7 @@
 # *M. tuberculosis* pangenome Snakemake pipeline
 This Snakemake pipeline determines core and accessory genes among 6 *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)) with and without the model strain H37Rv included. The pangenome calculated with [Panaroo](https://github.com/gtonkinhill/panaroo), which yields more accurate results for *M. tuberculosis* ([Tonkin-Hill et al., 2020](https://doi.org/10.1186/s13059-020-02090-4)), is compared to the pangenome from the more widely used tool [Roary](https://github.com/sanger-pathogens/Roary) based on the overlap, size and alignment entropy of the predicted orthogroups. Additionally, the quality of the pangenomes is estimated by identifying potentially missed orthogroups using [PanQC](https://github.com/maxgmarin/panqc).
 
-The pangenome is visualized as an [UpSet plot](https://upset.app/) of the orthogroups for all genes and optionally also for selected gene families. These can either be provided as lists of locus tags or as a regex matching the product description. Here, gene identifiers were provided for PE and PPE genes as obtained from the [PE/PPE Snakemake pipeline](https://github.com/mgbteam/mtb_pe_ppe) while a regex was provided for ESX and type II toxin-antitoxin family proteins.
+The pangenome is visualized as an [UpSet plot](https://upset.app/) of the orthogroups for all genes and optionally also for selected gene families. These can either be provided as lists of locus tags or as a regular expression (regex) matching the product description. Here, gene identifiers were provided for PE and PPE genes as obtained from the [PE/PPE Snakemake pipeline](https://github.com/mgbteam/mtb_pe_ppe) while a regex was provided for ESX and type II toxin-antitoxin family proteins.
 
 [TOC]: #
 ## Table of Contents
@@ -86,7 +86,7 @@ The `panaroo` subfolder contains the same results as the `roary` subfolder but o
 The `compare` subfolder contains comparisons between the orthogroups identified by Panaroo and by Roary.
 |Relative file path in compare subfolder|Contents|
 |--------|--------|
-|`entropy/alignment_entropy.png`|Boxplot comparing the alignment entropy between common and unique orhtogroups (lower is better)|
+|`entropy/alignment_entropy.png`|Boxplot comparing the alignment entropy between common and unique orthogroups (lower is better)|
 |`plots/roary_vs_panaroo_boxplot.png`|Boxplot of the number of members in the orthogroups predicted only by Panaroo, only by Roary, and by both|
 |`plots/roary_vs_panaroo_venn.png`|Venn diagram of overlap in the orthogroups predicted by Panaroo and Roary|
 |`groups/common.tsv`|Table of orthogroups predicted both by Panaroo and Roary|
@@ -100,8 +100,8 @@ This graph shows the dependencies of the defined Snakemake rules. Arrows indicat
 ![Rulegraph](rulegraph.svg)
 
 ## Citation
-**Stringent proteogenomic discovery of novel small proteins in Mycobacterium tuberculosis clinical reference strains**
+**Stringent proteogenomic discovery of novel small proteins in *Mycobacterium tuberculosis* clinical reference strains**
 
-Benjamin Heiniger, Christian Schori, Mohammad Arefian, Amir Banaei-Esfahani, Martin Schuler, Sonia Borrell, Chloé Loiseau, Daniela Brites, Iñaki Comas, Ruedi Aebersold, Sebastien Gagneux, Ben C. Collins, Christian H. Ahrens
+Benjamin Heiniger, Christian Schori, Mohammad Arefian, Amir Banaei-Esfahani, Martin Schuler, Sonia Borrell, Chloé Loiseau, Daniela Brites, Iñaki Comas, Ruedi Aebersold, Sébastien Gagneux, Ben C. Collins, Christian H. Ahrens
 
 bioRxiv 2026.01.27.701740; doi: https://doi.org/10.64898/2026.01.27.701740
