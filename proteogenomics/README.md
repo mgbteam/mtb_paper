@@ -1,9 +1,9 @@
 # *M. tuberculosis* proteogenomics Snakemake pipeline
 This Snakemake pipeline performs a proteogenomic analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)). The workflow combines genome annotation processing, peptide-spectrum matching, protein inference, stringent filtering and downstream annotation and structural analyses to identify and prioritize novel proteins.
 
-The pipeline converts multiple annotation sources to create 2 integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) for each strain: a standard iPtgxDB ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)) and a much smaller custom iPtgxDB based on Ribo-seq data ([Hadjeras et al., 2023](https://doi.org/10.1093/femsml/uqad012)), here using orthologs of Ribo-seq identifications from strain H37Rv ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980)). Mass spectrometry data from a Bruker timsTOF Pro device ([PRIDE Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)) is then searched for each strain against the respective iPtgxDBs using [MSFragger](https://msfragger.nesvilab.org/), relying on [MSBooster](https://doi.org/10.1038/s41467-023-40129-9) and [Percolator](https://github.com/percolator/percolator) for accurate peptide identification. Protein inference and false discovery rate (FDR) filtering is achieved using [Philosopher](https://philosopher.nesvilab.org/), followed by additional stringent filtering as described ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)), including the selection of unambiguous peptides based on the PeptideClassifier software ([Qeli and Ahrens, 2010](https://doi.org/10.1038/nbt0710-647)) extended for prokaryotic proteogenomics ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)). The actual FDR among all proteins and the subsets of RefSeq and novel proteins is estimated with an entrapment analysis using FDRBench ([Wen et al., 2025](https://doi.org/10.1038/s41592-025-02719-x)).
+The pipeline converts multiple annotation sources to create 2 integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) for each strain: a standard iPtgxDB ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)) and a much smaller custom iPtgxDB based on Ribo-seq data ([Hadjeras et al., 2023](https://doi.org/10.1093/femsml/uqad012)), here using orthologs of Ribo-seq identifications from strain H37Rv ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980)). Mass spectrometry data from a Bruker timsTOF Pro device ([PRIDE Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)) is then searched for each strain against the respective iPtgxDBs using [MSFragger](https://msfragger.nesvilab.org/), relying on [MSBooster](https://doi.org/10.1038/s41467-023-40129-9) and [Percolator](https://github.com/percolator/percolator) for accurate peptide identification. Protein inference and false discovery rate (FDR) filtering is achieved using [Philosopher](https://philosopher.nesvilab.org/), followed by additional stringent filtering as described ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)), including the selection of unambiguous peptides based on the PeptideClassifier software ([Qeli and Ahrens, 2010](https://doi.org/10.1038/nbt0710-647)) extended for prokaryotic proteogenomics ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)). The FDR among all proteins and the pre-defined subsets of RefSeq and novel proteins is estimated with an entrapment analysis using FDRBench ([Wen et al., 2025](https://doi.org/10.1038/s41592-025-02719-x)).
 
-Novel genes not annotated before, corrected start sites of annotated genes and pseudogenes with confirmed expression are reported separately. Novel gene candidates are further analyzed, including the overlap with newer annotations and novel CDS detected with ribosome profiling in strain H37Rv ([Smith et al., 2022](https://doi.org/10.7554/eLife.73980)), with analagous prediction of a signal of selection. Further, the presence of signal peptides, the subcellular localization and potential functions are predicted and integrated with [Panaroo](https://github.com/gtonkinhill/panaroo)-based pangenome information. Proteins newly identified with this pipeline include conserved and lineage-specific SEPs, an antitoxin, candidate antimicrobial peptides and novel proteins under purifying selection.
+Novel genes not annotated before, corrected start sites of annotated genes and pseudogenes with confirmed expression are reported separately. Novel gene candidates are further analyzed, including the overlap with newer annotations and novel CDS detected with ribosome profiling in strain H37Rv ([Smith et al., 2022](https://doi.org/10.7554/eLife.73980)), with analagous prediction of a signal of selection. Further, potential functions based on structural similarity and the inclusion in operons, as well as the conservation at different taxonomic levels are predicted and integrated with [Panaroo](https://github.com/gtonkinhill/panaroo)-based pangenome information. Proteins newly identified with this pipeline include conserved and lineage-specific SEPs, an antitoxin, candidate antimicrobial peptides and novel proteins under purifying selection.
 
 [TOC]: #
 ## Table of Contents
@@ -42,7 +42,7 @@ All other dependencies of FragPipe are either automatically installed with conda
 |--------|------:|
 |[Percolator](https://github.com/percolator/percolator)|3.6.5|
 |[MSBooster](https://github.com/Nesvilab/MSBooster)|1.2.31|
-|[batmass-io](https://batmass.org)|1.33.4|
+|[BatMass-io](https://batmass.org)|1.33.4|
 
 After installation, the paths to the 6 tools mentioned above have to be adapted in `config/config.yaml`.
 
@@ -53,9 +53,9 @@ Either the software itself has be installed manually:
 
 |Software|Version|Size|Notes|
 |--------|------:|---:|-----|
-|[FDRBench](https://github.com/Noble-Lab/FDRBench)|0.0.4|74 Mb|Estimation of actual subset FDR|
-|[amp-scanner](https://github.com/dan-veltri/amp-scanner-v2)|2|28 Mb|Antimicrobial peptide prediction|
-|[InterProScan](https://github.com/ebi-pf-team/interproscan)|5.59-91.0|47 Gb|Identification of functional domains
+|[FDRBench](https://github.com/Noble-Lab/FDRBench)|0.0.4|74 Mb|Estimation of FDR for a pre-defined subset|
+|[AMP-scanner](https://github.com/dan-veltri/amp-scanner-v2)|2|28 Mb|Antimicrobial peptide prediction|
+|[InterProScan](https://github.com/ebi-pf-team/interproscan)|5.59-91.0|47 Gb|Identification of functional protein domains|
 |[LipoP](https://services.healthtech.dtu.dk/services/LipoP-1.0/)|1.0a|632 Kb|Lipoprotein and signal peptide detection|
 
 Or the software is automatically installed with conda but a dataset has to be downloaded manually:
@@ -96,7 +96,7 @@ After the workflow finishes, an HTML report can be generated with:
 ```
 
 ### Optional Analyses Requiring Manual Intervention
-If enabled in `config/config.yaml`, the Phyre2 and OperonMapper analyses need manual intervention as they can be only used as a website. The pipeline creates input folders in the respective results folders that can be uploaded to the corresponding website. An output folder then has to be created next to the input folder containing the results and the pipeline has to be executed again to include these in the final tables.
+If enabled in `config/config.yaml`, the Phyre2 and OperonMapper analyses both need manual intervention, as they can be only used as a website. The pipeline creates input folders in the respective results folders that can be uploaded to the corresponding website. An output folder then has to be created next to the input folder containing the results and the pipeline has to be executed again to include these in the final tables.
 
 |Analysis|Results Folder|Expected Input File(s)|
 |--------|--------------|-------------------|
@@ -104,10 +104,10 @@ If enabled in `config/config.yaml`, the Phyre2 and OperonMapper analyses need ma
 |OperonMapper|`results/searches/{search}/postproc/operon_mapper`|`list_of_operons`<br>`functional descriptions`|
 
 ## Output
-The workflow writes its main results under the `results` directory. The converted annotations and generated iPtgxDBs are stored in the `results/annotations` and `results/iptgxdbs` subfolders, respectively. The search results are organized by search and the 4 stages of the analysis:
+The workflow writes its main results into the `results` directory. The converted annotations and generated iPtgxDBs are stored in the `results/annotations` and `results/iptgxdbs` subfolders, respectively. The search results are organized by search and the 4 stages of the analysis:
 
 - `results/searches/{search}/search/`: search against iPtgxDB assigning and rescoring peptide spectral matches
-- `results/searches/{search}/entrapment/`: searches against peptide and protein-level entrapment databases to estimate actual FDR
+- `results/searches/{search}/entrapment/`: searches against protein-level entrapment databases to estimate FDR of pre-defined subsets
 - `results/searches/{search}/protinf/`: protein inference and filtering
 - `results/searches/{search}/postproc/`: downstream annotation and post-processing of novel proteins
 
