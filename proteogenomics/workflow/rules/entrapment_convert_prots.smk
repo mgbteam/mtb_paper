@@ -4,7 +4,7 @@ rule entrapment_convert_prots:
         iptgxdb = lambda wildcards: "data/iptgxdbs/" + get_iptgxdb(wildcards.search) + "/{strain}/iptgxdb.fasta",
         mapping = lambda wildcards: "data/iptgxdbs/" + get_iptgxdb(wildcards.search) + "/{strain}/iptgxdb.tsv"
     output:
-        "results/searches/{search}/entrapment/protinf/fdrbench/convert/{strain}/{sample}/protein.reformat.tsv"
+        "results/searches/{search}/entrapment/protinf/convert_prots/{strain}/{sample}/protein.reformat.tsv"
     params:
         refseq_prefix = config["prefixes"]["refseq"],
         contam_prefix = config["prefixes"]["contam"]

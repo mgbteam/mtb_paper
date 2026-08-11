@@ -65,10 +65,11 @@ def collect_all(wildcards):
             if is_entrapment_enabled(search):
                 samples = get_strain_samples(strain)
 
-                for subset in ["all", "refseq", "novelty"]:
-                    fdpdir = f"results/searches/{search}/entrapment/fdrbench/plot_fdp/{strain}"
-                    results_fdp = [f"{fdpdir}/{s}/{subset}_fdp.png" for s in samples]
-                    results.extend(results_fdp)
+                for stage in ["pre_protparam", "post_protparam"]:
+                    for subset in ["all", "refseq", "novelty"]:
+                        fdpdir = f"results/searches/{search}/entrapment/fdrbench/{stage}/plot_fdp/{strain}"
+                        results_fdp = [f"{fdpdir}/{s}/{subset}_fdp.png" for s in samples]
+                        results.extend(results_fdp)
 
     return results
 

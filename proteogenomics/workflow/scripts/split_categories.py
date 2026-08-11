@@ -49,15 +49,17 @@ with open(args.input, "r") as fi:
     reader = csv.DictReader(fi, delimiter="\t")
     cols = reader.fieldnames
 
+    refseq_keys = ["RefSeq protein", "RefSeq protein decoy", "RefSeq protein entrapment"]
+
     for row in reader:
         outrows["all"]["rows"].append(row)
 
-        if row["protein-type"] == "RefSeq protein":
+        if row["protein-type"] in refseq_keys:
             outrows["refseq"]["rows"].append(row)
-        elif row["protein-type"] == "RefSeq pseudogene":
+        elif "pseudogene" in row["protein-type"]:
             outrows["pseudo"]["rows"].append(row)
             outrows["novelty"]["rows"].append(row)
-        elif row["protein-type"] == "extension/reduction to RefSeq protein":
+        elif row["protein-type"].startswith("extension/reduction to RefSeq"):
             outrows["starts"]["rows"].append(row)
             outrows["novelty"]["rows"].append(row)
         else:

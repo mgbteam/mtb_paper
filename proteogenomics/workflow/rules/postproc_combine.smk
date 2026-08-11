@@ -19,7 +19,7 @@ postproc_manual_flags_and_files = {
 
 def get_postproc_files(wildcards):
     folder = f"results/searches/{wildcards.search}"
-    files = [f"{folder}/protinf/split_categories/{wildcards.strain}/novels.tsv"]
+    files = [f"{folder}/protinf/split_cats/{wildcards.strain}/novels.tsv"]
 
     # Annotation comparison results
     for annot in config["postproc"]["annot_overlap"]:
@@ -36,7 +36,7 @@ def get_postproc_files(wildcards):
 
 def get_postproc_flags(wildcards):
     folder = f"results/searches/{wildcards.search}"
-    flags = ["-t", f"{folder}/protinf/split_categories/{wildcards.strain}/novels.tsv"]
+    flags = ["-t", f"{folder}/protinf/split_cats/{wildcards.strain}/novels.tsv"]
 
     # Annotation comparison results if any annotation given
     if config["postproc"]["annot_overlap"]:

@@ -1,6 +1,6 @@
 rule postproc_annot_overlap:
     input:
-        novels = "results/searches/{search}/protinf/split_categories/{strain}/novels.tsv",
+        novels = "results/searches/{search}/protinf/split_cats/{strain}/novels.tsv",
         annot = lambda wildcards: "data/annotations/{annot}/" + config["postproc"]["annot_overlap"][wildcards.annot]["filename"]
     output:
         "results/searches/{search}/postproc/novels/annot_overlap/{annot}/{strain}.tsv"

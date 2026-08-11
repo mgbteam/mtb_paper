@@ -1,6 +1,6 @@
 rule postproc_codon_gc_freq:
     input:
-        novels = "results/searches/{search}/protinf/split_categories/{strain}/novels.tsv",
+        novels = "results/searches/{search}/protinf/split_cats/{strain}/novels.tsv",
         genome = "data/annotations/refseq/{strain}.gb"
     output:
         table = "results/searches/{search}/postproc/novels/codon_gc_freq/{strain}.tsv",

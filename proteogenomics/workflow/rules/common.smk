@@ -2,8 +2,8 @@ wildcard_constraints:
     strain="[^/]+",
     search="[^/]+",
     subsearch=".{0}|/.+",
-    subsample=".{0}|/.+"
-
+    subsample=".{0}|/.+",
+    splitcatssfx=".{0}|[^/]+"
 
 
 # Get samples for a strain

@@ -1,6 +1,6 @@
 rule postproc_extract_combined_seqs:
     input:
-        novels = "results/searches/{search}/protinf/split_categories/{strain}/novels.tsv",
+        novels = "results/searches/{search}/protinf/split_cats/{strain}/novels.tsv",
         genome = "data/genomes/{strain}.fasta"
     output:
         "results/searches/{search}/postproc/novels/extract_seqs/{strain}/novels.faa"

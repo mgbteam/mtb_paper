@@ -27,7 +27,7 @@ def get_pepclass_input(wildcards):
     basedir = f"results/searches/{wildcards.search}{wildcards.subsearch}/protinf"
 
     if wildcards.subsearch.startswith("/entrapment"):
-        return f"{basedir}/fdrbench/convert/{wildcards.strain}{wildcards.subsample}/protein.reformat.tsv"
+        return f"{basedir}/convert_prots/{wildcards.strain}{wildcards.subsample}/protein.reformat.tsv"
     else:
         return f"{basedir}/abacus/{wildcards.strain}{wildcards.subsample}/proteins.reformat.tsv"
 
