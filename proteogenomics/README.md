@@ -18,6 +18,7 @@ Novel genes not annotated before, corrected start sites of annotated genes and p
 - [Running the Pipeline](#running-the-pipeline)
   - [Optional Analyses Requiring Manual Intervention](#optional-analyses-requiring-manual-intervention)
 - [Output](#output)
+- [Rulegraph](#rulegraph)
 - [Citation](#citation)
 
 ## Software Dependencies
@@ -112,6 +113,11 @@ The workflow writes its main results into the `results` directory. The converted
 - `results/searches/{search}/postproc/`: downstream annotation and post-processing of novel proteins
 
 The generated HTML report (`report.html`) collects the workflow outputs in a more accessible form.
+
+## Rulegraph
+This graph shows the dependencies of the defined Snakemake rules. Arrows indicate that the rule from which the arrow originates produces the files that are used as input by the rule the arrow points to.
+
+![Rulegraph](rulegraph.svg)
 
 ## Citation
 **Stringent proteogenomic discovery of novel small proteins in *Mycobacterium tuberculosis* clinical reference strains**
