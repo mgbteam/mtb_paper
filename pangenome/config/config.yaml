@@ -9,6 +9,7 @@ convert_pseudo: False
 roary:
   threads: 16
   flags: -e --mafft
+  tmpfolder: /tmp
 
 panaroo:
   threads: 16

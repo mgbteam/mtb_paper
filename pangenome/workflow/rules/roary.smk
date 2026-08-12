@@ -2,7 +2,8 @@ rule roary_run:
     input:
         lambda wildcards: expand("results/{{strains}}/convert/gff/{strain}.gff", strain=config["strains"][wildcards.strains])
     output:
-        folder = directory("results/{strains}/roary/run"),
+        tmpfolder = temp(directory(config["roary"]["tmpfolder"] + "/roary/{strains}")),
+        outfolder = directory("results/{strains}/roary/run"),
         groups = report("results/{strains}/roary/run/gene_presence_absence.csv", category="{strains} roary", subcategory="Tables"),
         seqs = "results/{strains}/roary/run/pan_genome_reference.fa"
     params:
@@ -13,10 +14,8 @@ rule roary_run:
         "../envs/roary.yml"
     shell:
         """
-        tmpdir="/tmp/$(uuidgen)"
-        roary -p {threads} {params.flags} -f "$tmpdir" {input}
+        roary -p {threads} {params.flags} -f '{output.tmpfolder}' {input}
 
-        mkdir -p "{output.folder}"
-        mv "$tmpdir"*/* "{output.folder}"
-        rm -r "$tmpdir"*
+        mkdir -p '{output.outfolder}'
+        cp '{output.tmpfolder}'/* '{output.outfolder}'
         """

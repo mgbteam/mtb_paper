@@ -116,14 +116,16 @@ postproc:
   interpro:
     enable: True
     threads: 16
-    folder: /scratch/src/interproscan-5.59-91.0
+    datafolder: /scratch/src/interproscan-5.59-91.0
+    tempfolder: /tmp
     flags: --disable-precalc --minsize 18 --pathways --goterms
   
   # Functional annotation by orthology
   eggnog:
     enable: True
     threads: 16
-    folder: /scratch/src/eggnog
+    datafolder: /scratch/src/eggnog
+    tempfolder: /tmp
     flags: -m diamond
 
   # Search for homologous proteins
