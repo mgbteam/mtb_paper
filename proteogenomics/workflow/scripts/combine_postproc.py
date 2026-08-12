@@ -2,7 +2,6 @@
 
 import argparse
 import csv
-import os
 
 parser = argparse.ArgumentParser(
         description="Combine tables from all post-processing analyses"
@@ -10,6 +9,10 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
         "-t", "--table", required=True,
         help="TSV table of identified proteins"
+)
+parser.add_argument(
+        "-f", "--fdpfilter",
+        help="FDP filtering results based on FDRBench"
 )
 parser.add_argument(
         "-a", "--annotoverlap", nargs="+",
@@ -79,6 +82,16 @@ with open(args.table, "r") as fi:
         combined[identifier] = row
 
 novels_present = len(combined) > 0
+
+# add FDP filter
+if args.fdpfilter and novels_present:
+    with open(args.fdpfilter, "r") as fi:
+        reader = csv.DictReader(fi, delimiter="\t")
+        colnames.append("FDP Filter")
+
+        for row in reader:
+            identifier = row["protein"].replace("|", "_")
+            combined[identifier]["FDP Filter"] = row["FDP Filter"]
 
 # Add annotation overlap
 if args.annotoverlap and novels_present:
@@ -308,9 +321,9 @@ if args.alphafold and novels_present:
     with open(args.alphafold, "r") as fi:
         reader = csv.reader(fi, delimiter="\t")
         colnames.append("alphafold confidence")
-        identifier = row[1].replace("|", "_")
 
         for row in reader:
+            identifier = row[1].replace("|", "_")
             combined[identifier]["alphafold confidence"] = row[0]
 
 # write combined table

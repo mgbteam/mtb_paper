@@ -1,4 +1,5 @@
 wildcard_constraints:
+    sample="[^/]+",
     strain="[^/]+",
     search="[^/]+",
     subsearch=".{0}|/.+",

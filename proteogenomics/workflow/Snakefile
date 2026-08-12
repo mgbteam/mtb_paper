@@ -26,6 +26,7 @@ include: "rules/protinf_summary.smk"
 
 include: "rules/postproc_add_annot.smk"
 
+include: "rules/postproc_fdp_filter.smk"
 include: "rules/postproc_annot_overlap.smk"
 include: "rules/postproc_extract_seqs.smk"
 include: "rules/postproc_lipop.smk"

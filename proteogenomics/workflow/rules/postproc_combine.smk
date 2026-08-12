@@ -1,5 +1,6 @@
 # Analyses that can be run automatically
 postproc_flags_and_files = {
+    "fdp_filter":         ("-f", "results/searches/{search}/postproc/novels/fdp_filter/{strain}.tsv"),
     "eggnog":             ("-e", "results/searches/{search}/postproc/novels/eggnog/{strain}/eggnog.emapper.annotations"),
     "interpro":           ("-i", "results/searches/{search}/postproc/novels/interpro/{strain}/novels.faa.tsv"),
     "psortb":             ("-s", "results/searches/{search}/postproc/novels/psortb/{strain}/psortb.txt"),
@@ -28,7 +29,12 @@ def get_postproc_files(wildcards):
 
     # Result files from all analyses that can be run automatically and are enabled
     for analysis, (flag, file) in postproc_flags_and_files.items():
-        if config["postproc"][analysis]["enable"]:
+        if analysis == "fdp_filter":
+            is_enabled = get_search_config_value(wildcards.search, "entrapment/enable")
+        else:
+            is_enabled = config["postproc"][analysis]["enable"]
+
+        if is_enabled:
             files.append(file.replace("{search}", wildcards.search).replace("{strain}", wildcards.strain))
 
     return files
@@ -48,7 +54,12 @@ def get_postproc_flags(wildcards):
 
     # Result files from all analyses that can be run automatically and are enabled
     for analysis, (flag, file) in postproc_flags_and_files.items():
-        if config["postproc"][analysis]["enable"]:
+        if analysis == "fdp_filter":
+            is_enabled = get_search_config_value(wildcards.search, "entrapment/enable")
+        else:
+            is_enabled = config["postproc"][analysis]["enable"]
+
+        if is_enabled:
             flags.extend([flag, file.replace("{search}", wildcards.search).replace("{strain}", wildcards.strain)])
 
     # Result files from all analyses that must be run manually, are enabled and results are present
