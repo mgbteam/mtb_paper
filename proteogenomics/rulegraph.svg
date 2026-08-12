@@ -28,15 +28,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="pt"
      showgrid="false"
-     inkscape:zoom="0.38699763"
-     inkscape:cx="621.45083"
-     inkscape:cy="1144.7099"
+     inkscape:zoom="1.5479905"
+     inkscape:cx="581.72191"
+     inkscape:cy="1254.5296"
      inkscape:window-width="1920"
      inkscape:window-height="1151"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="graph0" />
+     inkscape:current-layer="node8" />
   <g
      id="graph0"
      class="graph"
@@ -61,8 +61,8 @@
          text-anchor="middle"
          x="926.25"
          y="-15.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text10">all</text>
     </g>
     <!-- 1 -->
@@ -83,8 +83,8 @@
          text-anchor="middle"
          x="100.25"
          y="-159.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text17">protinf_summary</text>
     </g>
     <!-- 1&#45;&gt;0 -->
@@ -124,8 +124,8 @@
          text-anchor="middle"
          x="479.25"
          y="-447.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text31">protinf_split_categories</text>
     </g>
     <!-- 2&#45;&gt;1 -->
@@ -165,8 +165,8 @@
          text-anchor="middle"
          x="1108.25"
          y="-87.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text45">postproc_add_annot</text>
     </g>
     <!-- 2&#45;&gt;24 -->
@@ -207,8 +207,8 @@
          text-anchor="middle"
          x="814.25"
          y="-159.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text59">postproc_combine</text>
     </g>
     <!-- 2&#45;&gt;26 -->
@@ -248,8 +248,8 @@
          text-anchor="middle"
          x="1154.25"
          y="-231.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text73">postproc_annot_overlap</text>
     </g>
     <!-- 2&#45;&gt;27 -->
@@ -290,8 +290,8 @@
          text-anchor="middle"
          x="266.25"
          y="-303.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text87">postproc_fdp_filter</text>
     </g>
     <!-- 2&#45;&gt;28 -->
@@ -332,8 +332,8 @@
          text-anchor="middle"
          x="261.25"
          y="-375.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text101">entrapment_calc_prot_fdp</text>
     </g>
     <!-- 2&#45;&gt;30 -->
@@ -373,8 +373,8 @@
          text-anchor="middle"
          x="615.25"
          y="-375.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text115">postproc_extract_combined_seqs</text>
     </g>
     <!-- 2&#45;&gt;33 -->
@@ -414,8 +414,8 @@
          text-anchor="middle"
          x="449.25"
          y="-375.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text129">postproc_codon_gc_freq</text>
     </g>
     <!-- 2&#45;&gt;40 -->
@@ -455,8 +455,8 @@
          text-anchor="middle"
          x="757.25"
          y="-519.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text143">protinf_pseudo_overlap</text>
     </g>
     <!-- 3&#45;&gt;2 -->
@@ -496,8 +496,8 @@
          text-anchor="middle"
          x="917.25"
          y="-447.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text157">panaroo_refseq_gff_with_novels</text>
     </g>
     <!-- 3&#45;&gt;23 -->
@@ -537,8 +537,8 @@
          text-anchor="middle"
          x="1223.25"
          y="-447.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text171">postproc_operon_mapper</text>
     </g>
     <!-- 3&#45;&gt;42 -->
@@ -578,8 +578,8 @@
          text-anchor="middle"
          x="597.25"
          y="-591.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text185">protinf_collapse_extensions</text>
     </g>
     <!-- 4&#45;&gt;3 -->
@@ -619,8 +619,8 @@
          text-anchor="middle"
          x="562.25"
          y="-663.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text199">protinf_protparam_filter</text>
     </g>
     <!-- 5&#45;&gt;4 -->
@@ -660,8 +660,8 @@
          text-anchor="middle"
          x="556.25"
          y="-735.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text213">protinf_protparam_add</text>
     </g>
     <!-- 6&#45;&gt;5 -->
@@ -701,8 +701,8 @@
          text-anchor="middle"
          x="467.25"
          y="-807.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text227">protinf_pepclass_filter</text>
     </g>
     <!-- 7&#45;&gt;2 -->
@@ -761,8 +761,8 @@
          text-anchor="middle"
          x="429.25"
          y="-879.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text248">protinf_pepclass_add</text>
     </g>
     <!-- 8&#45;&gt;7 -->
@@ -802,8 +802,8 @@
          text-anchor="middle"
          x="209.25"
          y="-951.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text262">protinf_abacus_reformat</text>
     </g>
     <!-- 9&#45;&gt;8 -->
@@ -843,8 +843,8 @@
          text-anchor="middle"
          x="52.25"
          y="-1023.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text276">protinf_abacus_run</text>
     </g>
     <!-- 10&#45;&gt;9 -->
@@ -884,8 +884,8 @@
          text-anchor="middle"
          x="61.25"
          y="-1167.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text290">proteinprophet</text>
     </g>
     <!-- 11&#45;&gt;10 -->
@@ -925,8 +925,8 @@
          text-anchor="middle"
          x="166.25"
          y="-1095.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text304">protinf_philosopher_filter</text>
     </g>
     <!-- 11&#45;&gt;18 -->
@@ -966,8 +966,8 @@
          text-anchor="middle"
          x="213.25"
          y="-1239.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text318">percolator_convert</text>
     </g>
     <!-- 12&#45;&gt;11 -->
@@ -1026,8 +1026,8 @@
          text-anchor="middle"
          x="232.25"
          y="-1383.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text339">msbooster</text>
     </g>
     <!-- 13&#45;&gt;12 -->
@@ -1067,8 +1067,8 @@
          text-anchor="middle"
          x="283.25"
          y="-1311.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text353">percolator</text>
     </g>
     <!-- 13&#45;&gt;17 -->
@@ -1108,8 +1108,8 @@
          text-anchor="middle"
          x="232.25"
          y="-1455.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text367">msfragger</text>
     </g>
     <!-- 14&#45;&gt;12 -->
@@ -1168,8 +1168,8 @@
          text-anchor="middle"
          x="407.25"
          y="-1527.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text388">create_mainsearch_prot_db</text>
     </g>
     <!-- 15&#45;&gt;14 -->
@@ -1247,8 +1247,8 @@
          text-anchor="middle"
          x="412.25"
          y="-1023.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text416">protinf_pepclass_basic</text>
     </g>
     <!-- 15&#45;&gt;19 -->
@@ -1288,8 +1288,8 @@
          text-anchor="middle"
          x="407.25"
          y="-1599.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text430">iptgxdb_add_contams</text>
     </g>
     <!-- 16&#45;&gt;15 -->
@@ -1329,8 +1329,8 @@
          text-anchor="middle"
          x="539.25"
          y="-1455.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text444">iptgxdb_protparams</text>
     </g>
     <!-- 16&#45;&gt;20 -->
@@ -1370,8 +1370,8 @@
          text-anchor="middle"
          x="245.25"
          y="-1527.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text458">create_entrapment_prot_db</text>
     </g>
     <!-- 16&#45;&gt;29 -->
@@ -1487,8 +1487,8 @@
          text-anchor="middle"
          x="362.25"
          y="-951.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text500">entrapment_convert_prots</text>
     </g>
     <!-- 18&#45;&gt;31 -->
@@ -1566,8 +1566,8 @@
          text-anchor="middle"
          x="1249.25"
          y="-87.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text528">panaroo_postproc</text>
     </g>
     <!-- 21&#45;&gt;0 -->
@@ -1607,8 +1607,8 @@
          text-anchor="middle"
          x="1270.25"
          y="-159.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text542">panaroo_run</text>
     </g>
     <!-- 22&#45;&gt;21 -->
@@ -1648,8 +1648,8 @@
          text-anchor="middle"
          x="926.25"
          y="-87.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text556">postproc_integrate_panaroo</text>
     </g>
     <!-- 22&#45;&gt;25 -->
@@ -1901,8 +1901,8 @@
          text-anchor="middle"
          x="223.25"
          y="-159.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text647">entrapment_plot_fdp</text>
     </g>
     <!-- 30&#45;&gt;43 -->
@@ -1961,8 +1961,8 @@
          text-anchor="middle"
          x="462.25"
          y="-231.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text668">postproc_interpro</text>
     </g>
     <!-- 32&#45;&gt;26 -->
@@ -2021,8 +2021,8 @@
          text-anchor="middle"
          x="950.25"
          y="-231.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text689">postproc_psortb</text>
     </g>
     <!-- 33&#45;&gt;34 -->
@@ -2062,8 +2062,8 @@
          text-anchor="middle"
          x="958.25"
          y="-303.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text703">postproc_lipop</text>
     </g>
     <!-- 33&#45;&gt;35 -->
@@ -2103,8 +2103,8 @@
          text-anchor="middle"
          x="675.25"
          y="-303.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text717">postproc_extract_individual_seqs</text>
     </g>
     <!-- 33&#45;&gt;37 -->
@@ -2144,8 +2144,8 @@
          text-anchor="middle"
          x="474.25"
          y="-303.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text731">postproc_ampscanner2</text>
     </g>
     <!-- 33&#45;&gt;38 -->
@@ -2185,8 +2185,8 @@
          text-anchor="middle"
          x="685.25"
          y="-87.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text745">postproc_phyre2_create_input</text>
     </g>
     <!-- 33&#45;&gt;41 -->
@@ -2265,8 +2265,8 @@
          text-anchor="middle"
          x="814.25"
          y="-231.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text773">postproc_hhsuite_summary</text>
     </g>
     <!-- 36&#45;&gt;26 -->
@@ -2325,8 +2325,8 @@
          text-anchor="middle"
          x="627.25"
          y="-231.62"
-         font-family="sans"
-         font-size="10.00"
+         font-family="Arial"
+         font-size="11.00"
          id="text794">postproc_conservation_blast_summary</text>
     </g>
     <!-- 37&#45;&gt;39 -->
