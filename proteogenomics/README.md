@@ -18,6 +18,13 @@ Novel genes not annotated before, corrected start sites of annotated genes and p
 - [Running the Pipeline](#running-the-pipeline)
   - [Optional Analyses Requiring Manual Intervention](#optional-analyses-requiring-manual-intervention)
 - [Output](#output)
+  - [Most Important Output Files](#most-important-output-files)
+  - [iPtgxDBs Folder](#iptgxdbs-folder)
+  - [Searches Folder](#searches-folder)
+    - [Search](#search)
+    - [Protein Inference](#protein-inference)
+    - [Entrapment](#entrapment)
+    - [Post-Processing](#post-processing)
 - [Rulegraph](#rulegraph)
 - [Citation](#citation)
 
@@ -71,12 +78,14 @@ Or the software is automatically installed with conda but a dataset has to be do
 ### Provided Data to Reproduce Results
 All data required to reproduce the analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)) is provided in the `data` subfolder except for the MS/MS raw data which has to be downloaded separatebly from PRIDE ([Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)). The downloaded `.d` files have to be moved into the strain specific folders in `data/raw/`. All other input data is provided in the following folders:
 
-- `data/annotations/`: refseq annotation and annotations to check for presence of novels
-- `data/genomes/`: genome sequence files used by the pipeline
-- `data/iptgxdbs`: integrated proteogenomics databases used for searches
-- `data/contams.fasta`: contaminant protein sequences used during database construction
+|Path|Description|
+|------|-----------|
+|`data/annotations`|RefSeq annotation and annotations to check for presence of novels|
+|`data/genomes`|Genome sequence files used by the pipeline|
+|`data/iptgxdbs`|Integrated proteogenomics databases (iPtgxDBs) used for searches|
+|`data/contams.fasta`|Contaminant proteins from CRAPome ([Mellacheruvu et al., 2013](https://doi.org/10.1038/nmeth.2557))|
 
-The default strain set is defined in `config/config.yaml` under `strains` and includes the six analyzed strains: `0052`, `0072`, `0145`, `0153`, `0155`, and `0157`.
+The default strain set is defined in `config/config.yaml` under `strains` and includes the analyzed strains from lineage 1 (`0072`, `0153`, and `0157`) and lineage 2 (`0052`, `0145` and `0155`).
 
 ### Configuration
 Before running the pipeline, check the configuration in `config/config.yaml`. Make sure that all paths to manually installed dependencies are correct and adjust the memory maximum and number of threads of each step according to your device. The provided configuration was used on a machine with 64 CPU cores and 295 Gb of RAM on Ubuntu 22.04.5 LTS.
@@ -105,14 +114,98 @@ If enabled in `config/config.yaml`, the Phyre2 and OperonMapper analyses both ne
 |OperonMapper|`results/searches/{search}/postproc/operon_mapper`|`list_of_operons`<br>`functional descriptions`|
 
 ## Output
-The workflow writes its main results into the `results` directory. The converted annotations and generated iPtgxDBs are stored in the `results/annotations` and `results/iptgxdbs` subfolders, respectively. The search results are organized by search and the 4 stages of the analysis:
+The workflow writes all of its results into the `results` directory, which is divided into two subfolders: The `iptgxdbs` subfolder contains the processed integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) against which the mass spectrometry data is searched and the `searches` subfolder contains the search results including protein inference and all post-processing steps.
 
-- `results/searches/{search}/search/`: search against iPtgxDB assigning and rescoring peptide spectral matches
-- `results/searches/{search}/entrapment/`: searches against protein-level entrapment databases to estimate FDR of pre-defined subsets
-- `results/searches/{search}/protinf/`: protein inference and filtering
-- `results/searches/{search}/postproc/`: downstream annotation and post-processing of novel proteins
+### Most Important Output Files
+The subfolder for each search includes the following files which contain the most important results:
 
-The generated HTML report (`report.html`) collects the workflow outputs in a more accessible form.
+|File|Description|
+|----|-----------|
+|`protinf/protinf_summary.tsv`|Summary of identified proteins per strain and type of novelty|
+|`protinf/split_cats/{strain}/{subset}.tsv`|Lists of identified proteins, separated by the type of novelty|
+|`postproc/add_annot/{strain}/{subset}.tsv`|Identified RefSeq proteins and novel starts with annotation information added|
+|`postproc/novels/combined/{strain}.tsv`|Novel proteins per strain including all post-processing analyses|
+|`postproc/novels/novels_panaroo_postproc.tsv`|Orthogroups of identified novel proteins including all post-processing analyses|
+
+If entrapment is enabled, the FDP curves of each sample can be found in this location:
+`entrapment/fdrbench/post_protparam/plot_fdp/{strain}/{sample}/{subset}.png`
+
+### iPtgxDBs Folder
+The `results/iptgxdbs` folder contains a subfolder for each iPtgxDB type which differs in the composition of the included annotations (see table below). For each strain, contaminants from the CRAPome dataset ([Mellacheruvu et al., 2013](https://doi.org/10.1038/nmeth.2557)) are added to the database and the physico-chemical parameters of the proteins are calculated.
+
+
+|Annotation<br>Source|RefSeq<br>iPtgxDB|Standard<br>iPtgxDB|Custom<br>iPtgxDB|
+|----------|------|--------|------|
+|RefSeq|✔|✔|✔|
+|Prodigal| |✔|✔|
+|ChemGenome| |✔|✔|
+|*in silico* ORFs| |✔| |
+|H37Rv Ribo-seq| | |✔|
+
+### Searches Folder
+For each search defined in `config/config.yaml`, a corresponding subfolder is generated in `results/searches`. The results are then further categorized into the 4 stages of the analysis:
+
+#### Search
+The `search` subfolder contains the results of the proteomics searches with MSFragger, including the search database converted to the required format and peptide rescoring based on MSBooster and Percolator.
+
+|Subfolder|Description|
+|---------|-----------|
+|`database`|iPtgxDBs converted to format compatible with MSFragger|
+|`msfragger`|Results of the MSFragger searches|
+|`msbooster`|More accurate prediction of *in silico* spectra with MSBooster|
+|`percolator`|Rescoring of peptide identifications with Percolator|
+
+#### Protein Inference
+The `protinf` subfolder contains the results of infering proteins using ProteinProphet, the FDR filtering and consolidation of results from multiple samples with Philosopher and further custom filtering to limit FDR and prevent ambiguous identifications.
+
+|Subfolder|Description|
+|---------|-----------|
+|`proteinprophet`|Protein inference using ProteinProphet|
+|`filter_and_report`|FDR filtering using Philosopher|
+|`abacus`|Consolidation of results from multiple samples with Abacus|
+|`pepclass_filter`|Filtering of ambiguous protein identifications with PeptideClassifier|
+|`protparam_filter`|Ad hoc filtering of proteins based on number of PSMs and peptides|
+|`collapse_extensions`|Collapse multiple predictions of novel starts for the same gene|
+|`pseudo_overlap`|Reclassify novels as pseudogenes if they have large in-frame overlaps|
+|`split_cats`|Split identified proteins into RefSeq and different types of novelty|
+
+#### Entrapment
+If entrapment is enabled an `entrapment` folder will be created which also contains `search` and `protinf` subfolders for the respective entrapment searches, matching the descriptions for the normal searches above. However, it additionally contains an `fdrbench` subfolder with the following contents:
+
+|Subfolder|Description|
+|---------|-----------|
+|`pre_protparam/calc_fdp`|FDRBench based FDP calculation before ad hoc (aka protparam) filter|
+|`pre_protparam/plot_fdp`|Plots of FDP vs. FDR curves before ad hoc (aka protparam) filter|
+|`post_protparam/calc_fdp`|FDRBench based FDP calculation after ad hoc (aka protparam) filter|
+|`post_protparam/plot_fdp`|Plots of FDP vs. FDR curves after ad hoc (aka protparam) filter|
+
+#### Post-Processing
+The `postproc` subfolder contains all post-processing that has been performed either on all identified proteins or the subset of novel proteins.
+
+|Subfolder|Description|
+|---------|-----------|
+|`add_annot`|Add details from annotation to identified proteins|
+|`operon_mapper`|Predict operons based on identified RefSeq proteins and novels|
+|`panaroo`|Calculate pangenome based on identified RefSeq proteins and novels|
+|`novels`|Subfolders of all downstream analyses on novel proteins (see table below)|
+
+The `novels` folder may contain the following subfolders, depending on which downstream analyses were enabled in `config/config.yaml`
+
+|Subfolder|Description|
+|---------|-----------|
+|`fdp_filter`|Entrapment based classification into high and low confidence novels|
+|`annot_overlap`|Overlap with annotations not included in iPtgxDBs|
+|`extract_seqs`|Extract protein sequences of novels for further analyses|
+|`conservation_blast`|Assess conservation at different taxonomic levels|
+|`lipop`|Lipoprotein and signal peptide detection|
+|`psortb`|Prediction of subcellular localization|
+|`eggnog`|Functional annotation by orthology|
+|`interpro`|Identification of functional protein domains|
+|`hhsuite`|Search for homologous proteins|
+|`phyre2`|Prediction of structure and function|
+|`codon_gc_freq`|Signal of selection prediction based on codon GC skew ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980))|
+|`ampscanner2`|Antimicrobial peptide prediction|
+|`combined`|Integration of all of the analyses above into a summary table
 
 ## Rulegraph
 This graph shows the dependencies of the defined Snakemake rules. Arrows indicate that the rule from which the arrow originates produces the files that are used as input by the rule the arrow points to.
