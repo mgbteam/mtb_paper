@@ -1,9 +1,9 @@
 # *M. tuberculosis* proteogenomics Snakemake pipeline
 This Snakemake pipeline performs a proteogenomic analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)). The workflow combines genome annotation processing, peptide-spectrum matching, protein inference, stringent filtering and downstream annotation and structural analyses to identify and prioritize novel proteins.
 
-The pipeline converts multiple annotation sources to create 2 integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) for each strain: a standard iPtgxDB ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)) and a much smaller custom iPtgxDB based on Ribo-seq data ([Hadjeras et al., 2023](https://doi.org/10.1093/femsml/uqad012)), here using orthologs of Ribo-seq identifications from strain H37Rv ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980)). Mass spectrometry data from a Bruker timsTOF Pro device ([PRIDE Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)) is then searched for each strain against the respective iPtgxDBs using [MSFragger](https://msfragger.nesvilab.org/), relying on [MSBooster](https://doi.org/10.1038/s41467-023-40129-9) and [Percolator](https://github.com/percolator/percolator) for accurate peptide identification. Protein inference and false discovery rate (FDR) filtering is achieved using [Philosopher](https://philosopher.nesvilab.org/), followed by additional stringent filtering as described ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)), including the selection of unambiguous peptides based on the PeptideClassifier software ([Qeli and Ahrens, 2010](https://doi.org/10.1038/nbt0710-647)) extended for prokaryotic proteogenomics ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)). The FDR among all proteins and the pre-defined subsets of RefSeq and novel proteins is estimated with an entrapment analysis using FDRBench ([Wen et al., 2025](https://doi.org/10.1038/s41592-025-02719-x)).
+The pipeline relies on three integrated proteogenomics databases ([iPtgxDBs](https://iptgxdb.expasy.org/)) per strain: a RefSeq iPtgxDB including only the RefSeq annotation, a comprehensive standard iPtgxDB ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)) and a much smaller custom iPtgxDB based on Ribo-seq data ([Hadjeras et al., 2023](https://doi.org/10.1093/femsml/uqad012)), here using orthologs of Ribo-seq identifications from strain H37Rv ([Smith et al. 2022](https://doi.org/10.7554/eLife.73980)). Mass spectrometry data from a Bruker timsTOF Pro device ([PRIDE Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)) is searched for each strain against the respective iPtgxDBs using [MSFragger](https://msfragger.nesvilab.org/), relying on [MSBooster](https://doi.org/10.1038/s41467-023-40129-9) and [Percolator](https://github.com/percolator/percolator) for accurate peptide identification. Protein inference and false discovery rate (FDR) filtering is achieved using [Philosopher](https://philosopher.nesvilab.org/), followed by additional stringent filtering as described ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)), including the selection of unambiguous peptides based on the PeptideClassifier software ([Qeli and Ahrens, 2010](https://doi.org/10.1038/nbt0710-647)) extended for prokaryotic proteogenomics ([Omasits et al., 2017](https://doi.org/10.1101/gr.218255.116)). The FDR among all proteins and the pre-defined subsets of RefSeq and novel proteins is estimated with an entrapment analysis using FDRBench ([Wen et al., 2025](https://doi.org/10.1038/s41592-025-02719-x)).
 
-Novel genes not annotated before, corrected start sites of annotated genes and pseudogenes with confirmed expression are reported separately. Novel gene candidates are further analyzed, including the overlap with newer annotations and novel CDS detected with ribosome profiling in strain H37Rv ([Smith et al., 2022](https://doi.org/10.7554/eLife.73980)), with analagous prediction of a signal of selection. Further, potential functions based on structural similarity and the inclusion in operons, as well as the conservation at different taxonomic levels are predicted and integrated with [Panaroo](https://github.com/gtonkinhill/panaroo)-based pangenome information. Proteins newly identified with this pipeline include conserved and lineage-specific SEPs, an antitoxin, candidate antimicrobial peptides and novel proteins under purifying selection.
+Novel genes not annotated before, corrected start sites of annotated genes and pseudogenes with confirmed expression are reported separately. Novel gene candidates are further analyzed, including the overlap with newer annotations and novel CDS detected with ribosome profiling in strain H37Rv ([Smith et al., 2022](https://doi.org/10.7554/eLife.73980)), with analogous prediction of a signal of selection. Further, potential functions based on structural similarity and the inclusion in operons, as well as the conservation at different taxonomic levels are predicted and integrated with [Panaroo](https://github.com/gtonkinhill/panaroo)-based pangenome information. Proteins newly identified with this pipeline include conserved and lineage-specific SEPs, an antitoxin, candidate antimicrobial peptides and novel proteins under purifying selection.
 
 [TOC]: #
 ## Table of Contents
@@ -72,15 +72,15 @@ Or the software is automatically installed with conda but a dataset has to be do
 |-------|---:|-------:|-----|
 |[core_nt](https://ftp.ncbi.nih.gov/blast/db)|288 Gb|[tblastn](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html)|Conservation BLAST
 |[eggNOG DB 5.0.2](http://eggnog5.embl.de/download/emapperdb-5.0.2/)|49-90 Gb|[eggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)|Functional annotation by orthology
-|[UniRef30_2023_02](https://storage.googleapis.com/alphafold-databases/v2.3/UniRef30_2021_03.tar.gz)|328 Gb|[hhsuite](https://github.com/soedinglab/hh-suite)|Search for homologous proteins
+|[UniRef30_2023_02](https://wwwuser.gwdguser.de/~compbiol/uniclust/2023_02/UniRef30_2023_02_hhsuite.tar.gz)|328 Gb|[hhsuite](https://github.com/soedinglab/hh-suite)|Search for homologous proteins
 
 ## Input Data and Configuration
 ### Provided Data to Reproduce Results
-All data required to reproduce the analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)) is provided in the `data` subfolder except for the MS/MS raw data which has to be downloaded separatebly from PRIDE ([Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)). The downloaded `.d` files have to be moved into the strain specific folders in `data/raw/`. All other input data is provided in the following folders:
+All data required to reproduce the analysis of six *M. tuberculosis* clinical reference strains from lineages 1 and 2 ([Heiniger et al., 2026](https://doi.org/10.64898/2026.01.27.701740)) is provided in the `data` subfolder except for the MS/MS raw data which has to be downloaded separately from PRIDE ([Project PXD081163](https://www.ebi.ac.uk/pride/archive/projects/PXD081163)). The downloaded `.d` files have to be moved into the strain specific folders in `data/raw/`. All other input data is provided in the following folders:
 
 |Path|Description|
 |------|-----------|
-|`data/annotations`|RefSeq annotation and annotations to check for presence of novels|
+|`data/annotations`|RefSeq annotation and annotations to check for presence of novel proteins|
 |`data/genomes`|Genome sequence files used by the pipeline|
 |`data/iptgxdbs`|Integrated proteogenomics databases (iPtgxDBs) used for searches|
 |`data/contams.fasta`|Contaminant proteins from CRAPome ([Mellacheruvu et al., 2013](https://doi.org/10.1038/nmeth.2557))|
@@ -156,7 +156,7 @@ The `search` subfolder contains the results of the proteomics searches with MSFr
 |`percolator`|Rescoring of peptide identifications with Percolator|
 
 #### Protein Inference
-The `protinf` subfolder contains the results of infering proteins using ProteinProphet, the FDR filtering and consolidation of results from multiple samples with Philosopher and further custom filtering to limit FDR and prevent ambiguous identifications.
+The `protinf` subfolder contains the results of inferring proteins using ProteinProphet, the FDR filtering and consolidation of results from multiple samples with Philosopher and further custom filtering to limit FDR and prevent ambiguous identifications.
 
 |Subfolder|Description|
 |---------|-----------|
@@ -166,7 +166,7 @@ The `protinf` subfolder contains the results of infering proteins using ProteinP
 |`pepclass_filter`|Filtering of ambiguous protein identifications with PeptideClassifier|
 |`protparam_filter`|Ad hoc filtering of proteins based on number of PSMs and peptides|
 |`collapse_extensions`|Collapse multiple predictions of novel starts for the same gene|
-|`pseudo_overlap`|Reclassify novels as pseudogenes if they have large in-frame overlaps|
+|`pseudo_overlap`|Reclassify novel proteins as pseudogenes if they have large in-frame overlaps|
 |`split_cats`|Split identified proteins into RefSeq and different types of novelty|
 
 #### Entrapment
@@ -185,17 +185,17 @@ The `postproc` subfolder contains all post-processing that has been performed ei
 |Subfolder|Description|
 |---------|-----------|
 |`add_annot`|Add details from annotation to identified proteins|
-|`operon_mapper`|Predict operons based on identified RefSeq proteins and novels|
-|`panaroo`|Calculate pangenome based on identified RefSeq proteins and novels|
+|`operon_mapper`|Predict operons based on identified RefSeq and novel proteins|
+|`panaroo`|Calculate pangenome based on identified RefSeq and novel proteins|
 |`novels`|Subfolders of all downstream analyses on novel proteins (see table below)|
 
 The `novels` folder may contain the following subfolders, depending on which downstream analyses were enabled in `config/config.yaml`
 
 |Subfolder|Description|
 |---------|-----------|
-|`fdp_filter`|Entrapment based classification into high and low confidence novels|
+|`fdp_filter`|Entrapment based classification into high and low confidence novel proteins|
 |`annot_overlap`|Overlap with annotations not included in iPtgxDBs|
-|`extract_seqs`|Extract protein sequences of novels for further analyses|
+|`extract_seqs`|Extract protein sequences of novel proteins for further analyses|
 |`conservation_blast`|Assess conservation at different taxonomic levels|
 |`lipop`|Lipoprotein and signal peptide detection|
 |`psortb`|Prediction of subcellular localization|
