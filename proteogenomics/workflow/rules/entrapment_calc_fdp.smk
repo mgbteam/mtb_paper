@@ -20,12 +20,16 @@ rule entrapment_calc_prot_fdp:
         "../envs/openjdk.yml"
     shell:
         """
-java -jar {params.settings[jar]} \
-{params.settings[fdp_flags]} \
--level protein \
--i '{input}' \
--o '{output}' \
--score 'score:0' \
--fold 1 \
--pick first
+if [ "$(cat '{input}' | wc -l)" -gt "1" ]; then
+    java -jar {params.settings[jar]} \
+    {params.settings[fdp_flags]} \
+    -level protein \
+    -i '{input}' \
+    -o '{output}' \
+    -score 'score:0' \
+    -fold 1 \
+    -pick first
+else
+    touch '{output}'
+fi
         """
