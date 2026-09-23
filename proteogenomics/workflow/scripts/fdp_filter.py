@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 
 import pandas as pd
 
@@ -24,26 +25,32 @@ args = parser.parse_args()
 filt_prots = None
 
 for prot_file, fdp_file in args.input:
-    df = pd.read_csv(fdp_file, sep=",")
-    df.sort_values("combined_fdp", inplace=True)
-    prev_row = {"q_value": 0, "Protein Probability": 1, "Top Peptide Probability": 1}
+    if os.path.getsize(fdp_file) > 0:
+        df = pd.read_csv(fdp_file, sep=",")
+        df.sort_values("combined_fdp", inplace=True)
+        prev_row = {"q_value": 0, "Protein Probability": 1, "Top Peptide Probability": 1}
 
-    for index, row in df.iterrows():
-        if row["combined_fdp"] > 0.01:
-            max_qval = prev_row["q_value"]
-            break
+        for index, row in df.iterrows():
+            if row["combined_fdp"] > 0.01:
+                max_qval = prev_row["q_value"]
+                break
 
-        prev_row = row
+            prev_row = row
 
-    df = pd.read_csv(prot_file, sep="\t")
-    filt_prots_sample = df[df["Protein Qvalue"] <= max_qval]
+        df = pd.read_csv(prot_file, sep="\t")
+        filt_prots_sample = df[df["Protein Qvalue"] <= max_qval]
 
-    if filt_prots is None:
-        filt_prots = filt_prots_sample
-    else:
-        filt_prots = pd.concat([filt_prots, filt_prots_sample], axis=0)
+        if filt_prots is None:
+            filt_prots = filt_prots_sample
+        else:
+            filt_prots = pd.concat([filt_prots, filt_prots_sample], axis=0)
 
 df = pd.read_csv(args.proteins, sep="\t")
-df["FDP Filter"] = df["protein"].isin(filt_prots["Protein"])
+
+if filt_prots is not None:
+    df["FDP Filter"] = df["protein"].isin(filt_prots["Protein"])
+else:
+    df["FDP Filter"] = pd.NA
+
 df = df[["protein", "FDP Filter"]]
 df.to_csv(args.output, sep="\t", index=False)
