@@ -1,7 +1,7 @@
 rule msfragger:
     input:
         dbdir = "results/searches/{search}{subsearch}/search/database/{strain}",
-        rawdir = ancient("data/raw/{strain}")
+        rawdir = ancient(config["rawfiles"]["folder"] + "/{strain}") 
     output:
         directory("results/searches/{search}{subsearch}/search/msfragger/{strain}"),
     log:
@@ -23,7 +23,7 @@ sed -i 's;^num_threads.*;num_threads = {threads};' "$config"
 sed -i "s;^database_name.*;database_name = $db;" "$config"
 
 cd '{output}'
-ln -s '{workflow.basedir}/../{input.rawdir}'/*.d .
+ln -s '{input.rawdir}'/*.d .
 cd -
 
 java -Xmx{params.settings[memory]} -jar '{params.settings[executable]}' "$config" '{output}'/*.d 2>&1 | tee {log}
